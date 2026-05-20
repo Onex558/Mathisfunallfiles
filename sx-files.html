@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sx Files</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* Hard reset to fight Google Sites injected styles */
+  .game-btn, .game-btn * { all: revert; box-sizing: border-box; }
+  .letter-section, .letter-section * { line-height: normal; }
+  input, button { font-size: 14px !important; line-height: 1.4 !important; }
+
+
+  :root {
+    --purple: #7F77DD;
+    --purple-light: #AFA9EC;
+    --purple-dark: #3C3489;
+    --purple-deeper: #26215C;
+    --blue: #378ADD;
+    --blue-light: #85B7EB;
+    --blue-dark: #185FA5;
+    --blue-deeper: #042C53;
+    --bg: #0d0b1a;
+    --bg2: #120f24;
+    --bg3: #1a1630;
+    --surface: rgba(255,255,255,0.04);
+    --surface2: rgba(255,255,255,0.07);
+    --border: rgba(127,119,221,0.2);
+    --border2: rgba(55,138,221,0.25);
+    --text: #e8e6f8;
+    --text-muted: #8a87b0;
+    --text-dim: #4a4770;
+    --grad: linear-gradient(135deg, #534AB7 0%, #185FA5 100%);
+    --grad-soft: linear-gradient(135deg, rgba(83,74,183,0.15) 0%, rgba(24,95,165,0.15) 100%);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    overflow-x: hidden;
+  }
+
+  /* Ambient background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 20%, rgba(83,74,183,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 80% 80%, rgba(24,95,165,0.1) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0;
+    width: 56px;
+    height: 100vh;
+    background: rgba(13,11,26,0.9);
+    border-right: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 12px 6px;
+    overflow-y: auto;
+    z-index: 100;
+  }
+
+  .sidebar::-webkit-scrollbar { width: 3px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .sb-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 7px 2px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s ease;
+    width: 100%;
+    letter-spacing: 0.5px;
+  }
+
+  .sb-btn:hover {
+    background: var(--grad-soft);
+    border-color: var(--border);
+    color: var(--purple-light);
+  }
+
+  .sb-btn.active {
+    background: var(--grad-soft);
+    border-color: var(--purple);
+    color: var(--purple-light);
+  }
+
+  .sb-btn.empty { opacity: 0.2; cursor: default; pointer-events: none; }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: 56px;
+    flex: 1;
+    padding: 36px 28px 60px;
+    max-width: 860px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── HEADER ── */
+  .header { margin-bottom: 32px; }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+
+  .brand-logo {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    background: var(--grad);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -1px;
+    flex-shrink: 0;
+    box-shadow: 0 0 24px rgba(83,74,183,0.4);
+  }
+
+  .brand h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    background: var(--grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+  }
+
+  .tagline {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    margin-left: 62px;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+  }
+
+  .meta-links {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  .meta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+    text-decoration: none;
+    background: var(--grad);
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: opacity 0.15s, transform 0.15s;
+    letter-spacing: 0.2px;
+  }
+
+  .meta-link:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  .meta-link svg { width: 15px; height: 15px; fill: currentColor; }
+
+  /* ── SEARCH ── */
+  .search-wrap {
+    position: relative;
+    margin-bottom: 8px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 13px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--purple);
+    width: 16px; height: 16px;
+    pointer-events: none;
+  }
+
+  #searchInput {
+    width: 100%;
+    max-width: 460px;
+    padding: 11px 16px 11px 40px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  #searchInput::placeholder { color: var(--text-dim); }
+  #searchInput:focus {
+    border-color: var(--purple);
+    box-shadow: 0 0 0 3px rgba(127,119,221,0.15);
+  }
+
+  .load-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-muted);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .load-btn:hover { background: var(--surface2); color: var(--purple-light); }
+
+  /* ── SECTIONS ── */
+  #sections-container { margin-top: 28px; }
+
+  .letter-section { margin-bottom: 36px !important; width: 100% !important; height: auto !important; min-height: unset !important; }
+
+  .letter-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .letter-badge {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    background: var(--grad);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .letter-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+  }
+
+  .buttons-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 5px !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .game-btn {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    color: var(--text) !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    padding: 11px 16px !important;
+    cursor: pointer !important;
+    text-align: left !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    line-height: 1.4 !important;
+    min-height: unset !important;
+    height: auto !important;
+    max-height: none !important;
+    transition: background 0.12s, border-color 0.12s, transform 0.1s;
+  }
+
+  .game-btn:hover {
+    background: var(--grad-soft);
+    border-color: var(--purple);
+    transform: translateX(2px);
+  }
+
+  .game-btn:active { transform: translateX(1px) scale(0.998); }
+
+  .game-icon {
+    width: 16px; height: 16px;
+    color: var(--purple);
+    flex-shrink: 0;
+    opacity: 0.8;
+  }
+
+  .empty-msg {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-style: italic;
+    padding: 4px 0;
+  }
+</style>
+</head>
+<body>
+
+<nav class="sidebar" id="sidebar" aria-label="Alphabet navigation"></nav>
+
+<main class="main">
+  <div class="header">
+    <div class="brand">
+      <div class="brand-logo">Sx</div>
+      <h1>Sx Files</h1>
+    </div>
+    <p class="tagline">Game file browser</p>
+
+    <div class="meta-links">
+      <a href="https://sites.google.com/view/sxalpha" target="_blank" class="meta-link">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+        Sx Site
+      </a>
+      <a href="https://discord.gg/RESqZP4d7n" target="_blank" class="meta-link">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.055a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        Discord
+      </a>
+    </div>
+
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text" placeholder="Search games…" id="searchInput" autocomplete="off">
+    </div>
+    <button class="load-btn" onclick="loadGames()">
+      ↻ Reload games list
+    </button>
+  </div>
+
+  <div id="sections-container"></div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/searchbut.js"></script>
+<script>
+  // Sidebar letters
+  const sidebar = document.getElementById('sidebar');
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  letters.forEach(l => {
+    const btn = document.createElement('button');
+    btn.className = 'sb-btn';
+    btn.textContent = l;
+    btn.title = 'Jump to ' + l;
+    btn.onclick = () => {
+      const el = document.getElementById('section-' + l);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    sidebar.appendChild(btn);
+  });
+
+  // Search
+  document.getElementById('searchInput').addEventListener('input', function () {
+    const q = this.value.toLowerCase().trim();
+    document.querySelectorAll('.game-btn').forEach(btn => {
+      btn.style.display = btn.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+    document.querySelectorAll('.letter-section').forEach(sec => {
+      const visible = [...sec.querySelectorAll('.game-btn')].some(b => b.style.display !== 'none');
+      sec.style.display = visible ? '' : 'none';
+    });
+  });
+
+  // Watch for games.js injecting sections
+  const observer = new MutationObserver(() => {
+    document.querySelectorAll('.letter-section').forEach(sec => {
+      const letter = sec.dataset.letter;
+      if (!letter) return;
+
+      // Update sidebar button state
+      const idx = letters.indexOf(letter);
+      if (idx !== -1) {
+        const sideBtn = sidebar.children[idx];
+        const hasGames = sec.querySelectorAll('.game-btn, input[type="button"]').length > 0;
+        if (sideBtn) sideBtn.classList.toggle('empty', !hasGames);
+      }
+
+      // Inject letter header if missing
+      if (!sec.querySelector('.letter-header')) {
+        const h = document.createElement('div');
+        h.className = 'letter-header';
+        h.innerHTML = `<span class="letter-badge">${letter}</span><span class="letter-title">${letter}</span>`;
+        sec.prepend(h);
+      }
+
+      // Upgrade any raw input[type=button] to styled game buttons
+      sec.querySelectorAll('input[type="button"]').forEach(old => {
+        const btn = document.createElement('button');
+        btn.className = 'game-btn';
+        btn.innerHTML = `
+          <svg class="game-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="3"/>
+            <path d="M6 12h4M8 10v4M15 12h.01M17 10.5h.01"/>
+          </svg>
+          <span>${old.value}</span>`;
+        if (old.onclick) btn.onclick = old.onclick;
+        old.replaceWith(btn);
+      });
+
+      // Wrap buttons in grid if not already
+      if (!sec.querySelector('.buttons-grid')) {
+        const grid = document.createElement('div');
+        grid.className = 'buttons-grid';
+        sec.querySelectorAll('.game-btn').forEach(b => grid.appendChild(b));
+        sec.appendChild(grid);
+      }
+    });
+  });
+
+  observer.observe(document.getElementById('sections-container'), { childList: true, subtree: true });
+
+  function loadGames() {
+    const existing = document.querySelector('script[src*="games.js"]');
+    if (existing) existing.remove();
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@latest/games.js';
+    document.body.appendChild(s);
+  }
+
+  loadGames();
+</script>
+</body>
+</html>
