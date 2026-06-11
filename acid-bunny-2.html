@@ -1,0 +1,121 @@
+
+<html><head><script>(function(){
+  const injectedHref = "https://1674491298-atari-embeds.googleusercontent.com/embeds/1eea06de280c5ab9b261c0869a310ca0/inner-frame-minified.html?jsh=m%3B%2F_%2Fscs%2Fabc-static%2F_%2Fjs%2Fk%3Dgapi.lb.en.ch0Jz-JlMrQ.O%2Fd%3D1%2Frs%3DAHpOoo_YD4KoV8fTh_kLhktsiThAm3yJ5A%2Fm%3D__features__";
+  const siteUrl = "https://sites.google.com";
+  const injectedDomain = "1674491298-atari-embeds.googleusercontent.com";
+  const BASE_FOR_REL = "https://1674491298-atari-embeds.googleusercontent.com/embeds/1eea06de280c5ab9b261c0869a310ca0/inner-frame-minified.html?jsh=m%3B%2F_%2Fscs%2Fabc-static%2F_%2Fjs%2Fk%3Dgapi.lb.en.ch0Jz-JlMrQ.O%2Fd%3D1%2Frs%3DAHpOoo_YD4KoV8fTh_kLhktsiThAm3yJ5A%2Fm%3D__features__";
+  function hookIMA() {
+    let _google = window.google;
+    Object.defineProperty(window, 'google', {
+      configurable: true, enumerable: true,
+      get: function() { return _google; },
+      set: function(v) {
+        _google = v;
+        if (v && v.ima) {
+           if (v.ima.settings && v.ima.settings.setPageUrl) {
+               v.ima.settings.setPageUrl(siteUrl);
+           }
+           if (v.ima.AdsRequest && !v.ima.AdsRequest.__patched) {
+             const OriginalAdsRequest = v.ima.AdsRequest;
+             v.ima.AdsRequest = function() {
+               const req = new OriginalAdsRequest();
+               req.descriptionUrl = siteUrl;
+               req.contentUrl = siteUrl;
+               req.url = siteUrl;
+               req.pageUrl = siteUrl;
+               return req;
+             };
+             v.ima.AdsRequest.prototype = OriginalAdsRequest.prototype;
+             v.ima.AdsRequest.__patched = true;
+           }
+        }
+      }
+    });
+  }
+  hookIMA();
+  setInterval(function() {
+    if (window.google && window.google.ima) {
+       if (window.google.ima.settings && window.google.ima.settings.setPageUrl) { window.google.ima.settings.setPageUrl(siteUrl); }
+       if (window.google.ima.AdsRequest && !window.google.ima.AdsRequest.__patched) {
+         const OriginalAdsRequest = window.google.ima.AdsRequest;
+         window.google.ima.AdsRequest = function() {
+            const req = new OriginalAdsRequest();
+            req.descriptionUrl = siteUrl;
+            req.contentUrl = siteUrl;
+            req.url = siteUrl;
+            return req;
+         };
+         window.google.ima.AdsRequest.prototype = OriginalAdsRequest.prototype;
+         window.google.ima.AdsRequest.__patched = true;
+       }
+    }
+  }, 50);
+  const AD_HOSTS = ['gamemonetize.com', 'gamedistribution.com'];
+  function isAdHost(url){ try { return AD_HOSTS.some(h => url.includes(h)); } catch(e){ return false; } }
+  function absolutize(url){ try{ new URL(url); return url; }catch(e){ try { return new URL(url, BASE_FOR_REL).href; } catch(e2){ return url; } } }
+  function patchDomainParamToUrl(u){ try{ if(!(u instanceof URL)) u=new URL(u,location.href); const cur=u.searchParams.get('domain'); if(!cur||cur.trim()===''||cur.toLowerCase().startsWith('blob')){ u.searchParams.set('domain', injectedDomain); } return u.toString(); }catch(e){ return u.toString?u.toString():u; } }
+  const _fetch=window.fetch; window.fetch=function(i,n){ try{ let u=null; if(typeof i==='string')u=i; else if(i instanceof Request)u=i.url; if(u){ try{ new URL(u);}catch(e){u=absolutize(u);} if(isAdHost(u)){ const p=patchDomainParamToUrl(new URL(u,location.href)); i=(typeof i==='string')?p:new Request(p,i); } } }catch(e){} return _fetch.call(this,i,n); };
+  try{ const _o=XMLHttpRequest.prototype.open; XMLHttpRequest.prototype.open=function(m,u,a,s,p){ try{ let f=u; try{ new URL(f);}catch(e){ f=absolutize(f);} if(isAdHost(f)) f=patchDomainParamToUrl(new URL(f,location.href)); return _o.call(this,m,f,a!==false,s,p); }catch(e){ return _o.apply(this,arguments);} }; }catch(e){}
+  try{ Object.defineProperty(document,'referrer',{ get:function(){ return siteUrl; }, configurable:true }); }catch(e){}
+  const swfBlobCache=new Map();
+  async function fetchArrayBuffer(url){ const r=await fetch(url); if(!r.ok) throw new Error('fetch failed'); return await r.arrayBuffer(); }
+  async function swfToBlobUrl(url){ if(swfBlobCache.has(url)) return swfBlobCache.get(url); try{ const ab=await fetchArrayBuffer(url); const b=URL.createObjectURL(new Blob([ab],{type:'application/x-shockwave-flash'})); swfBlobCache.set(url,b); return b; }catch(e){ return url; } }
+  function tryConvertExistingSwfElements(){ try{ const objs=document.getElementsByTagName('object'); for(let o of objs){ const data=o.getAttribute('data')||''; if(data.toLowerCase().endsWith('.swf')){ (async function(el,src){ const abs=absolutize(src); const b=await swfToBlobUrl(abs); el.setAttribute('data',b); for(let p of el.getElementsByTagName('param')){ if((p.getAttribute('name')||'').toLowerCase()==='movie') p.setAttribute('value',b); } })(o,data); } } const embeds=document.getElementsByTagName('embed'); for(let e of embeds){ const src=e.getAttribute('src')||e.src||''; if(src.toLowerCase().endsWith('.swf')){ (async function(el,s){ const abs=absolutize(s); const b=await swfToBlobUrl(abs); el.setAttribute('src',b); })(e,src); } } }catch(e){} }
+  setTimeout(tryConvertExistingSwfElements,10);
+})();</script><base href="https://1674491298-atari-embeds.googleusercontent.com/embeds/1eea06de280c5ab9b261c0869a310ca0/inner-frame-minified.html?jsh=m%3B%2F_%2Fscs%2Fabc-static%2F_%2Fjs%2Fk%3Dgapi.lb.en.ch0Jz-JlMrQ.O%2Fd%3D1%2Frs%3DAHpOoo_YD4KoV8fTh_kLhktsiThAm3yJ5A%2Fm%3D__features__"><style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+
+  #container {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  canvas {
+    display: block;
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+<script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+<script>
+window.RufflePlayer = window.RufflePlayer || {};
+window.RufflePlayer.config = {
+"autoplay": "off",
+"polyfills": true,
+"letterbox": "on",
+"backgroundColor": null,
+"scale": "showAll",
+"allowFullscreen": true,
+"forceScale": true,
+"forceAlign": true,
+"splashScreen": true,
+"wmode": "Window",
+"unmuteOverlay": "hidden",
+"quality": "high" };
+window.addEventListener("load", (event) => {
+const ruffle = window.RufflePlayer.newest();
+const player = ruffle.createPlayer();
+const container = document.getElementById("container");
+container.appendChild(player);
+player.load("https://cdn.jsdelivr.net/gh/oldflashgames/games@ee4cf6b714632167644f41c687e5f7222e78cfe3/acid-bunny-2.swf");
+player.style.width = "100%";
+player.style.height = "100%";
+});
+</script>
+<title>classroom.google.com</title><link rel="icon" href="https://ssl.gstatic.com/classroom/favicon.png"><style>html,body,#container{margin:0;padding:0;width:100%!important;height:100%!important;overflow:hidden!important}</style></head><body><div id="container">
+</div>
+
+
+<script type="text/javascript">window.SDK_OPTIONS={gameId:"r2tzpy9cgrn2u4xgzc9z0zbtvxm16mby",onEvent:function(a){switch(a.name){case"SDK_GAME_PAUSE":break;case"SDK_GAME_START":break;case"SDK_READY":break}}};(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById(c)||(a=a.createElement(b),a.id=c,a.src="https://cdn.jsdelivr.net/gh/st39/sdk@main/sdkjs.js",d.parentNode.insertBefore(a,d))})(document,"script","gamemonetize-sdk");</script><script type="text/javascript">let isAdShown=false;function onClick(e){if(!isAdShown&&typeof sdk!=='undefined'&&typeof sdk.showBanner==='function'){sdk.showBanner();isAdShown=true}window.removeEventListener("click",onClick)}window.addEventListener("click",onClick);</script>
+
+</body></html>

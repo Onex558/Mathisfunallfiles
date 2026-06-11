@@ -1,0 +1,239 @@
+
+<html lang="en-us"><head><script>(function(){
+  const injectedHref = "https://721511577-atari-embeds.googleusercontent.com/embeds/1eea06de280c5ab9b261c0869a310ca0/inner-frame-minified.html?jsh=m%3B%2F_%2Fscs%2Fabc-static%2F_%2Fjs%2Fk%3Dgapi.lb.en.ch0Jz-JlMrQ.O%2Fd%3D1%2Frs%3DAHpOoo_YD4KoV8fTh_kLhktsiThAm3yJ5A%2Fm%3D__features__";
+  const siteUrl = "https://sites.google.com";
+  const injectedDomain = "721511577-atari-embeds.googleusercontent.com";
+  const BASE_FOR_REL = "https://cdn.jsdelivr.net/gh/RobiFet/Platform@60f7dd4d2efd22aba2d61e2cfb257a6f3a20eee1/spec/";
+  function hookIMA() {
+    let _google = window.google;
+    Object.defineProperty(window, 'google', {
+      configurable: true, enumerable: true,
+      get: function() { return _google; },
+      set: function(v) {
+        _google = v;
+        if (v && v.ima) {
+           if (v.ima.settings && v.ima.settings.setPageUrl) {
+               v.ima.settings.setPageUrl(siteUrl);
+           }
+           if (v.ima.AdsRequest && !v.ima.AdsRequest.__patched) {
+             const OriginalAdsRequest = v.ima.AdsRequest;
+             v.ima.AdsRequest = function() {
+               const req = new OriginalAdsRequest();
+               req.descriptionUrl = siteUrl;
+               req.contentUrl = siteUrl;
+               req.url = siteUrl;
+               req.pageUrl = siteUrl;
+               return req;
+             };
+             v.ima.AdsRequest.prototype = OriginalAdsRequest.prototype;
+             v.ima.AdsRequest.__patched = true;
+           }
+        }
+      }
+    });
+  }
+  hookIMA();
+  setInterval(function() {
+    if (window.google && window.google.ima) {
+       if (window.google.ima.settings && window.google.ima.settings.setPageUrl) { window.google.ima.settings.setPageUrl(siteUrl); }
+       if (window.google.ima.AdsRequest && !window.google.ima.AdsRequest.__patched) {
+         const OriginalAdsRequest = window.google.ima.AdsRequest;
+         window.google.ima.AdsRequest = function() {
+            const req = new OriginalAdsRequest();
+            req.descriptionUrl = siteUrl;
+            req.contentUrl = siteUrl;
+            req.url = siteUrl;
+            return req;
+         };
+         window.google.ima.AdsRequest.prototype = OriginalAdsRequest.prototype;
+         window.google.ima.AdsRequest.__patched = true;
+       }
+    }
+  }, 50);
+  const AD_HOSTS = ['gamemonetize.com', 'gamedistribution.com'];
+  function isAdHost(url){ try { return AD_HOSTS.some(h => url.includes(h)); } catch(e){ return false; } }
+  function absolutize(url){ try{ new URL(url); return url; }catch(e){ try { return new URL(url, BASE_FOR_REL).href; } catch(e2){ return url; } } }
+  function patchDomainParamToUrl(u){ try{ if(!(u instanceof URL)) u=new URL(u,location.href); const cur=u.searchParams.get('domain'); if(!cur||cur.trim()===''||cur.toLowerCase().startsWith('blob')){ u.searchParams.set('domain', injectedDomain); } return u.toString(); }catch(e){ return u.toString?u.toString():u; } }
+  const _fetch=window.fetch; window.fetch=function(i,n){ try{ let u=null; if(typeof i==='string')u=i; else if(i instanceof Request)u=i.url; if(u){ try{ new URL(u);}catch(e){u=absolutize(u);} if(isAdHost(u)){ const p=patchDomainParamToUrl(new URL(u,location.href)); i=(typeof i==='string')?p:new Request(p,i); } } }catch(e){} return _fetch.call(this,i,n); };
+  try{ const _o=XMLHttpRequest.prototype.open; XMLHttpRequest.prototype.open=function(m,u,a,s,p){ try{ let f=u; try{ new URL(f);}catch(e){ f=absolutize(f);} if(isAdHost(f)) f=patchDomainParamToUrl(new URL(f,location.href)); return _o.call(this,m,f,a!==false,s,p); }catch(e){ return _o.apply(this,arguments);} }; }catch(e){}
+  try{ Object.defineProperty(document,'referrer',{ get:function(){ return siteUrl; }, configurable:true }); }catch(e){}
+  const swfBlobCache=new Map();
+  async function fetchArrayBuffer(url){ const r=await fetch(url); if(!r.ok) throw new Error('fetch failed'); return await r.arrayBuffer(); }
+  async function swfToBlobUrl(url){ if(swfBlobCache.has(url)) return swfBlobCache.get(url); try{ const ab=await fetchArrayBuffer(url); const b=URL.createObjectURL(new Blob([ab],{type:'application/x-shockwave-flash'})); swfBlobCache.set(url,b); return b; }catch(e){ return url; } }
+  function tryConvertExistingSwfElements(){ try{ const objs=document.getElementsByTagName('object'); for(let o of objs){ const data=o.getAttribute('data')||''; if(data.toLowerCase().endsWith('.swf')){ (async function(el,src){ const abs=absolutize(src); const b=await swfToBlobUrl(abs); el.setAttribute('data',b); for(let p of el.getElementsByTagName('param')){ if((p.getAttribute('name')||'').toLowerCase()==='movie') p.setAttribute('value',b); } })(o,data); } } const embeds=document.getElementsByTagName('embed'); for(let e of embeds){ const src=e.getAttribute('src')||e.src||''; if(src.toLowerCase().endsWith('.swf')){ (async function(el,s){ const abs=absolutize(s); const b=await swfToBlobUrl(abs); el.setAttribute('src',b); })(e,src); } } }catch(e){} }
+  setTimeout(tryConvertExistingSwfElements,10);
+})();</script><base href="https://cdn.jsdelivr.net/gh/RobiFet/Platform@60f7dd4d2efd22aba2d61e2cfb257a6f3a20eee1/spec/">
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    #gameContainer canvas {
+      display:block;
+    }
+
+    div#webgl-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+
+    div#loadingBox {
+      width: 100%;
+      height: 0px;
+      position: absolute;
+      top: 50%;
+      margin-top: 137px;
+      text-align: center;
+    }
+
+    div#icon {
+      width: 300px;
+      height: 310px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -185px;
+      margin-left: -150px;
+      background-image: url("https://cdn.jsdelivr.net/gh/ahgoofy433/gms@31001046fedd9d338729ed0c318882b543bedb65/aspiring-artist/Template/anthill.png");
+      background-repeat: no-repeat;
+      box-shadow: 0px 0px 0px #ffffff;
+    }
+
+    div#box {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0%;
+      left: 0%;
+      margin-top: 0px;
+      margin-left: 0px;
+      background: #000;
+      box-shadow: 0px 0px 0px #000;
+    }
+
+    div#bgBar {
+      display: none;
+      position: absolute;
+      width: 300px;
+      margin-left: -150px;
+      left: 50%;
+      height: 18px;
+      background-color: #1e1c1d;
+      box-shadow: 0px 0px 0px #000;
+    }
+
+    div#progressBar {
+      display: none;
+      left: 50%;
+      position: absolute;
+      margin-left: -150px;
+      width: 0px;
+      height: 18px;
+      background-color: #ffffff;
+    }
+
+    p#loadingInfo {
+      color: #000;
+      letter-spacing: 1px;
+      position: absolute;
+      width: 100%;
+      font-family: sans-serif;
+      text-align: center;
+      top: 50%;
+      font-size: 11px;
+      font-weight: 500;
+      margin-top: 140px;
+      text-shadow: 0px 0px 5px #000;
+    }
+
+    div#spinner {
+      position: absolute;
+      height: 18px;
+      left: 50%;
+      margin-left: -150px;
+      width: 300px;
+      position: relative;
+      overflow: hidden;
+      background-color: #000000;
+      box-shadow: 0px 0px 0px #000;
+    }
+
+    div#spinner:before {
+      display: block;
+      position: absolute;
+      content: "";
+      width: 150%;
+      margin-left: -10px;
+      height: 10px;
+      background-color: #000000;
+      transform: rotate(-5deg);
+      animation: loading 1s linear infinite;
+    }
+
+    @keyframes loading {
+      from {
+        top: -185%
+      }
+      to {
+        top: 225%
+      }
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/gh/ahgoofy433/gms@31001046fedd9d338729ed0c318882b543bedb65/aspiring-artist/Build/UnityLoader.js"></script>
+  <script>
+    function UnityProgress(gameInstance, progress) {
+      var container = document.getElementById('gameContainer');
+      if (container) document.body.style.background = container.style.background;
+
+      if (!gameInstance.Module) {
+         return;
+      } else if (progress === "complete") {
+        document.getElementById("loadingBox").style.display = "none";
+        document.getElementById("icon").style.display = "none";
+        document.getElementById("loadingInfo").style.display = "none";
+        document.getElementById("box").style.display = "none";
+        return;
+      } else if (progress == 1) {
+        document.getElementById("loadingInfo").innerHTML = "PROCESSING...";
+        document.getElementById("spinner").style.display = "inherit";
+        document.getElementById("bgBar").style.display = "none";
+        document.getElementById("progressBar").style.display = "none";
+      } else if (progress > 0) {
+        document.getElementById("progressBar").style.width = 300 * progress + "px"
+        document.getElementById("loadingInfo").innerHTML = Math.round(progress * 100) + "%";
+        document.getElementById("spinner").style.display = "none";
+        document.getElementById("bgBar").style.display = "block";
+        document.getElementById("progressBar").style.display = "inherit";
+      }
+    }
+    var gameInstance = UnityLoader.instantiate("gameContainer", "https://cdn.jsdelivr.net/gh/ahgoofy433/gms@31001046fedd9d338729ed0c318882b543bedb65/aspiring-artist/Build/AI_armor.json", {
+      onProgress: UnityProgress,
+      Module: {
+        onRuntimeInitialized: function() { UnityProgress(gameInstance, "complete") }
+      }
+    });
+  </script>
+<title>classroom.google.com</title><link rel="icon" href="https://ssl.gstatic.com/classroom/favicon.png"><style>html,body,#container{margin:0;padding:0;width:100%!important;height:100%!important;overflow:hidden!important}</style></head>
+<body>
+  <div id="webgl-content" style="width: 800px; height: 600px">
+    <div id="gameContainer" style="width: 800px; height: 600px"></div>
+  </div>
+  <div id="box"></div>
+  <div id="loadingBox">
+    <div id="spinner"></div>
+    <div id="bgBar"></div>
+    <div id="progressBar"></div>
+  </div>
+   <div id="icon"></div> 
+  <p id="loadingInfo"></p>
+
+
+
+</body></html>

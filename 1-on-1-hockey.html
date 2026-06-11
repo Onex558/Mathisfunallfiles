@@ -1,0 +1,310 @@
+
+<html lang="en"><head><script>(function(){
+  const injectedHref = "https://736670734-atari-embeds.googleusercontent.com/embeds/1eea06de280c5ab9b261c0869a310ca0/inner-frame-minified.html?jsh=m%3B%2F_%2Fscs%2Fabc-static%2F_%2Fjs%2Fk%3Dgapi.lb.en.ch0Jz-JlMrQ.O%2Fd%3D1%2Frs%3DAHpOoo_YD4KoV8fTh_kLhktsiThAm3yJ5A%2Fm%3D__features__";
+  const siteUrl = "https://sites.google.com";
+  const injectedDomain = "736670734-atari-embeds.googleusercontent.com";
+  const BASE_FOR_REL = "https://736670734-atari-embeds.googleusercontent.com/embeds/1eea06de280c5ab9b261c0869a310ca0/inner-frame-minified.html?jsh=m%3B%2F_%2Fscs%2Fabc-static%2F_%2Fjs%2Fk%3Dgapi.lb.en.ch0Jz-JlMrQ.O%2Fd%3D1%2Frs%3DAHpOoo_YD4KoV8fTh_kLhktsiThAm3yJ5A%2Fm%3D__features__";
+  function hookIMA() {
+    let _google = window.google;
+    Object.defineProperty(window, 'google', {
+      configurable: true, enumerable: true,
+      get: function() { return _google; },
+      set: function(v) {
+        _google = v;
+        if (v && v.ima) {
+           if (v.ima.settings && v.ima.settings.setPageUrl) {
+               v.ima.settings.setPageUrl(siteUrl);
+           }
+           if (v.ima.AdsRequest && !v.ima.AdsRequest.__patched) {
+             const OriginalAdsRequest = v.ima.AdsRequest;
+             v.ima.AdsRequest = function() {
+               const req = new OriginalAdsRequest();
+               req.descriptionUrl = siteUrl;
+               req.contentUrl = siteUrl;
+               req.url = siteUrl;
+               req.pageUrl = siteUrl;
+               return req;
+             };
+             v.ima.AdsRequest.prototype = OriginalAdsRequest.prototype;
+             v.ima.AdsRequest.__patched = true;
+           }
+        }
+      }
+    });
+  }
+  hookIMA();
+  setInterval(function() {
+    if (window.google && window.google.ima) {
+       if (window.google.ima.settings && window.google.ima.settings.setPageUrl) { window.google.ima.settings.setPageUrl(siteUrl); }
+       if (window.google.ima.AdsRequest && !window.google.ima.AdsRequest.__patched) {
+         const OriginalAdsRequest = window.google.ima.AdsRequest;
+         window.google.ima.AdsRequest = function() {
+            const req = new OriginalAdsRequest();
+            req.descriptionUrl = siteUrl;
+            req.contentUrl = siteUrl;
+            req.url = siteUrl;
+            return req;
+         };
+         window.google.ima.AdsRequest.prototype = OriginalAdsRequest.prototype;
+         window.google.ima.AdsRequest.__patched = true;
+       }
+    }
+  }, 50);
+  const AD_HOSTS = ['gamemonetize.com', 'gamedistribution.com'];
+  function isAdHost(url){ try { return AD_HOSTS.some(h => url.includes(h)); } catch(e){ return false; } }
+  function absolutize(url){ try{ new URL(url); return url; }catch(e){ try { return new URL(url, BASE_FOR_REL).href; } catch(e2){ return url; } } }
+  function patchDomainParamToUrl(u){ try{ if(!(u instanceof URL)) u=new URL(u,location.href); const cur=u.searchParams.get('domain'); if(!cur||cur.trim()===''||cur.toLowerCase().startsWith('blob')){ u.searchParams.set('domain', injectedDomain); } return u.toString(); }catch(e){ return u.toString?u.toString():u; } }
+  const _fetch=window.fetch; window.fetch=function(i,n){ try{ let u=null; if(typeof i==='string')u=i; else if(i instanceof Request)u=i.url; if(u){ try{ new URL(u);}catch(e){u=absolutize(u);} if(isAdHost(u)){ const p=patchDomainParamToUrl(new URL(u,location.href)); i=(typeof i==='string')?p:new Request(p,i); } } }catch(e){} return _fetch.call(this,i,n); };
+  try{ const _o=XMLHttpRequest.prototype.open; XMLHttpRequest.prototype.open=function(m,u,a,s,p){ try{ let f=u; try{ new URL(f);}catch(e){ f=absolutize(f);} if(isAdHost(f)) f=patchDomainParamToUrl(new URL(f,location.href)); return _o.call(this,m,f,a!==false,s,p); }catch(e){ return _o.apply(this,arguments);} }; }catch(e){}
+  try{ Object.defineProperty(document,'referrer',{ get:function(){ return siteUrl; }, configurable:true }); }catch(e){}
+  const swfBlobCache=new Map();
+  async function fetchArrayBuffer(url){ const r=await fetch(url); if(!r.ok) throw new Error('fetch failed'); return await r.arrayBuffer(); }
+  async function swfToBlobUrl(url){ if(swfBlobCache.has(url)) return swfBlobCache.get(url); try{ const ab=await fetchArrayBuffer(url); const b=URL.createObjectURL(new Blob([ab],{type:'application/x-shockwave-flash'})); swfBlobCache.set(url,b); return b; }catch(e){ return url; } }
+  function tryConvertExistingSwfElements(){ try{ const objs=document.getElementsByTagName('object'); for(let o of objs){ const data=o.getAttribute('data')||''; if(data.toLowerCase().endsWith('.swf')){ (async function(el,src){ const abs=absolutize(src); const b=await swfToBlobUrl(abs); el.setAttribute('data',b); for(let p of el.getElementsByTagName('param')){ if((p.getAttribute('name')||'').toLowerCase()==='movie') p.setAttribute('value',b); } })(o,data); } } const embeds=document.getElementsByTagName('embed'); for(let e of embeds){ const src=e.getAttribute('src')||e.src||''; if(src.toLowerCase().endsWith('.swf')){ (async function(el,s){ const abs=absolutize(s); const b=await swfToBlobUrl(abs); el.setAttribute('src',b); })(e,src); } } }catch(e){} }
+  setTimeout(tryConvertExistingSwfElements,10);
+})();</script><base href="https://736670734-atari-embeds.googleusercontent.com/embeds/1eea06de280c5ab9b261c0869a310ca0/inner-frame-minified.html?jsh=m%3B%2F_%2Fscs%2Fabc-static%2F_%2Fjs%2Fk%3Dgapi.lb.en.ch0Jz-JlMrQ.O%2Fd%3D1%2Frs%3DAHpOoo_YD4KoV8fTh_kLhktsiThAm3yJ5A%2Fm%3D__features__">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: #000 !important;
+  }
+  body {
+    -webkit-text-size-adjust: 100%;
+    font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    color: #e5e5e5;
+  }
+
+  #waflashContainer {
+    position: fixed !important;
+    inset: 0 !important;
+    background: #000 !important;
+  }
+
+  #canvas.waflashCanvas {
+    position: fixed !important;
+    left: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    max-height: none !important;
+    margin: 0 !important;
+    border: 0 !important;
+    outline: none !important;
+    background: #000 !important;
+    display: block !important;
+  }
+
+  #waflashStatus {
+    position: fixed; z-index: 1000;
+    left: 50%; top: 50%; transform: translate(-50%,-50%);
+    display: none; max-width: 460px; width: calc(100% - 32px);
+    padding: 14px 16px; border-radius: 14px;
+    background: rgba(255,255,255,0.94); color: #111;
+    border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 8px 28px rgba(0,0,0,.35);
+    text-align: left; user-select: none;
+  }
+  .waflash-loader{margin-top:10px;height:6px;background:#e6e6e9;border-radius:999px;overflow:hidden;position:relative}
+  .waflash-loader .bar{position:absolute;left:-40%;top:0;bottom:0;width:40%;background:#6f63ff;border-radius:999px;animation:waflash-indeterminate 1.1s linear infinite}
+  @keyframes waflash-indeterminate{0%{left:-40%;width:40%}50%{left:25%;width:55%}100%{left:105%;width:40%}}
+  .waflash-caption{margin-top:8px;font-size:12px;color:#4b5563}
+  #canvas.waflashCanvas:focus-visible{outline:2px solid rgba(111,99,255,.7);outline-offset:2px}
+  @media (prefers-reduced-motion: reduce){.waflash-loader .bar{animation-duration:3s}}
+</style>
+
+<title>classroom.google.com</title><link rel="icon" href="https://ssl.gstatic.com/classroom/favicon.png"><style>html,body,#container{margin:0;padding:0;width:100%!important;height:100%!important;overflow:hidden!important}</style></head>
+<body>
+
+<script>
+  var gameConfig = {
+    swfUrl: "https://cdn.jsdelivr.net/gh/NWylynko/potatos@7ca279435083c6d51ad912731736f8a51440ec1c/swf/one-on-one-hockey.swf"
+  }
+</script>
+
+
+<div id="waflashContainer">
+  <canvas class="waflashCanvas" id="canvas" tabindex="1"></canvas>
+  <div id="waflashStatus" style="display: none;">Playing...</div>
+
+  <script>
+    var ua = navigator.userAgent.toLowerCase();
+    if ((navigator.appName =='Netscape' && ua.indexOf('trident') != -1) || (ua.indexOf("msie") != -1)) {
+      var waf = document.getElementById('waflashStatus');
+      waf.style.display ='block';
+      waf.innerText ='??? ?????(IE) ??? ??? ???? ???? !\n??, ???? ?? ????? ??????.';
+      gtag('event', 'connect_from_ie', {'event_category': 'error', 'event_label': ua });
+    }
+  </script>
+
+ <script type="module" crossorigin="anonymous">
+  let is_mobile = /Mobi/i.test(window.navigator.userAgent);
+  if (is_mobile) {
+    function scrollToSubject() {
+      try { window.scrollTo({ top: 100, left: 0, behavior: 'smooth' }); } catch (e) {}
+    }
+    scrollToSubject();
+    window.addEventListener("orientationchange", function() {
+      setTimeout(scrollToSubject, 100);
+    });
+  } else {
+    document.getElementById('canvas').focus();
+  }
+  document.getElementById('canvas').addEventListener("keydown", function(ev) {
+    ev.preventDefault(); ev.stopPropagation();
+  });
+  document.getElementById('canvas').addEventListener("click", function() {
+    document.getElementById('canvas').focus();
+  });
+  document.addEventListener("mousedown", (function() {
+    const canvasElement = document.getElementById('canvas'); let focused = false;
+    return function(ev) {
+      if (ev.target == canvasElement) { if (!focused) { canvasElement.focus(); focused = true; } }
+      else if (focused) { focused = false; }
+      return true;
+    }
+  })());
+
+(function ensureFullscreenCanvas(){
+  const c = document.getElementById('canvas');
+  const lock = () => {
+    c.style.setProperty('position','fixed','important');
+    c.style.setProperty('left','0','important');
+    c.style.setProperty('top','0','important');
+    c.style.setProperty('right','0','important');
+    c.style.setProperty('bottom','0','important');
+    c.style.setProperty('width','100vw','important');
+    c.style.setProperty('height','100vh','important');
+    c.style.setProperty('margin','0','important');
+    c.style.setProperty('background','#000','important');
+    document.documentElement.style.setProperty('background','#000','important');
+    document.body.style.setProperty('background','#000','important');
+  };
+  lock();
+  new MutationObserver(lock).observe(c, { attributes: true, attributeFilter: ['style','width','height','class'] });
+  window.addEventListener('resize', lock);
+})();
+
+  import createWaflashModule from "https://cdn.jsdelivr.net/gh/jakwhegf/wflas@e3867f928f87b3fe8dc388a4a843f73aa50d1835/waflash.min.js?2022091801";
+
+  const WAFLASH_BASE_URL = "https://cdn.jsdelivr.net/gh/jakwhegf/wflas@e3867f928f87b3fe8dc388a4a843f73aa50d1835/";
+
+  const createWaflash = (swfUrl, opts) => {
+    if (swfUrl || (swfUrl = ""), (opts = opts || {}).flashVars && (swfUrl += (swfUrl.includes("?") ? "&" : "?") + opts.flashVars)) return;
+
+    let a = {
+      arguments: [swfUrl, "0", opts.gpu ? "webgl" : "default", opts.enableFilters === true ? "0" : "1"],
+      options: opts,
+      preRun: [],
+      postRun: [],
+      locateFile: (filename, base) => WAFLASH_BASE_URL + filename + "?2022091801",
+      print(msg) { console.log(msg); },
+      printErr(msg) { console.error(msg); },
+
+      canvas: (function() {
+        const c = document.getElementById("canvas");
+        c.addEventListener("webglcontextlost", function (ev) {
+          console.warn("WebGL context lost. Reload the page to continue.");
+          ev.preventDefault();
+        }, false);
+        return c;
+      })(),
+
+      statusElement: document.getElementById("waflashStatus"),
+
+      setStatus: (msg) => {
+        if (!msg) return;
+
+        if (/^Downloading data\.{3} \((\d+)\/(\d+)\)/.test(msg)) {
+          const m = msg.match(/^Downloading data\.{3} \((\d+)\/(\d+)\)/);
+          const cur = parseInt(m[1], 10), all = parseInt(m[2], 10);
+          const pct = Math.max(0, Math.min(100, Math.floor(cur / all * 100)));
+          a.statusElement.innerHTML = `Downloading player... ${pct}%`;
+          a.showStatus();
+          return;
+        }
+
+        if (msg.startsWith("Loading SWF")) {
+          a.statusElement.innerHTML = `
+            <div>Loading SWF...</div>
+            <div class="waflash-loader"><div class="bar"></div></div>
+            <div class="waflash-caption">Loading game file, please wait...</div>
+          `;
+          a.showStatus();
+          return;
+        }
+
+        a.statusElement.textContent = msg;
+        a.showStatus();
+      },
+
+      showStatus() { a.statusElement.style.display = "block"; },
+      hideStatus() { a.statusElement.style.display = "none"; },
+      unload() {},
+
+      WAFLASH: {
+        hal: {
+          url_transformRequestUrl(originalUrl) {
+            const map = (opts && opts.resourceMap) || null;
+
+            if (Array.isArray(map)) {
+              for (let [pattern, target] of map) {
+                if (pattern instanceof RegExp) {
+                  if (pattern.test(originalUrl)) return target === null ? null : originalUrl.replace(pattern, target);
+                } else if (typeof pattern === "string") {
+                  const kind = pattern.charAt(0);
+                  if (kind === "=") {
+                    if (pattern.slice(1) === originalUrl) return target;
+                  } else if (kind === "~") {
+                    const re = new RegExp(pattern.slice(1));
+                    if (re.test(originalUrl)) return target === null ? null : originalUrl.replace(re, target);
+                  } else {
+                    let q = originalUrl.indexOf("?"), path = originalUrl, qs = "";
+                    if (q >= 0) { path = originalUrl.substring(0, q); qs = "&" + originalUrl.substr(q + 1); }
+                    if (pattern === path) return target === null ? null : (target + qs);
+                  }
+                }
+              }
+            }
+
+            if (originalUrl.startsWith("http://") &&
+                /(\.github\.io|\.waflash\.io|waflash\.cdn\.ntruss\.com|\.archive\.org)/.test(originalUrl)) {
+              return originalUrl.replace("http://", "https://");
+            }
+            return originalUrl;
+          }
+        }
+      }
+    };
+
+    window.waflash = a;
+
+    a.setStatus("Prepairing...");
+    createWaflashModule(a).then(() => {
+      console.log("WAFLASH> Waflash module created!");
+      // a.hideStatus();
+    });
+  };
+
+  const destroyWaflash = () => {
+    console.log("WAFLASH> Waflash component will unmount!");
+    waflash.unload();
+    waflash = null;
+    window.waflash = null;
+  };
+
+  createWaflash(gameConfig.swfUrl, window.wafOptions || {});
+</script>
+</div>
+<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+<script type="text/javascript">window.SDK_OPTIONS={gameId:"r2tzpy9cgrn2u4xgzc9z0zbtvxm16mby",onEvent:function(a){switch(a.name){case"SDK_GAME_PAUSE":break;case"SDK_GAME_START":break;case"SDK_READY":break}}};(function(a,b,c){var d=a.getElementsByTagName(b)[0];a.getElementById(c)||(a=a.createElement(b),a.id=c,a.src="https://cdn.jsdelivr.net/gh/st39/sdk@main/sdkjs.js",d.parentNode.insertBefore(a,d))})(document,"script","gamemonetize-sdk");</script><script type="text/javascript">let isAdShown=false;function onClick(e){if(!isAdShown&&typeof sdk!=='undefined'&&typeof sdk.showBanner==='function'){sdk.showBanner();isAdShown=true}window.removeEventListener("click",onClick)}window.addEventListener("click",onClick);</script>
+
+
+
+</body></html>
