@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- All relative files are loaded from the original game directory -->
+  <base href="https://cdn.jsdelivr.net/gh/Onex558/potesss@main/rec%20room%20lol/html-classic.itch.zone/html/16247684/web/">
+
+  <title>Rec Room GBC</title>
+  <meta name="author" content="Gridino">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: #000;
+    }
+
+    body {
+      overflow: hidden;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="gameboy_shell">
+
+    <div id="game">
+      <canvas id="mainCanvas" width="160" height="144">
+        No Canvas Support
+      </canvas>
+    </div>
+
+    <div id="controller">
+
+      <div id="controller_dpad">
+        <div id="controller_left"></div>
+        <div id="controller_right"></div>
+        <div id="controller_up"></div>
+        <div id="controller_down"></div>
+      </div>
+
+      <div id="controller_select" class="capsuleBtn">
+        Select
+      </div>
+
+      <div id="controller_start" class="capsuleBtn">
+        Start
+      </div>
+
+      <div id="controller_b" class="roundBtn">
+        B
+      </div>
+
+      <div id="controller_a" class="roundBtn">
+        A
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const customControls = {};
+  </script>
+
+  <!-- Other emulator files -->
+  <script src="js/other/mobile.js"></script>
+  <script src="js/other/base64.js"></script>
+  <script src="js/other/swfobject.js"></script>
+  <script src="js/other/resampler.js"></script>
+  <script src="js/other/XAudioServer.js"></script>
+  <script src="js/other/controls.js"></script>
+  <script src="js/other/resize.js"></script>
+
+  <!-- Game Boy emulator -->
+  <script src="js/GameBoyCore.js"></script>
+  <script src="js/GameBoyIO.js"></script>
+
+</body>
+</html>
