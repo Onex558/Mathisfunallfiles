@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <base href="https://cdn.jsdelivr.net/gh/Onex558/potesss@main/whatbeatsrock.net/">
+
+    <title>What Beats Rock?</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+
+        .game-container {
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: #1a237e;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+
+        .effect-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .item-emoji {
+            font-size: 120px;
+            margin: 30px 0;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .item-emoji.correct {
+            animation: correctAnswer 0.6s ease;
+        }
+
+        .item-emoji.wrong {
+            animation: wrongAnswer 0.6s ease;
+        }
+
+        @keyframes correctAnswer {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes wrongAnswer {
+            0%, 100% { transform: scale(1); }
+            20% { transform: scale(0.95) rotate(-5deg); }
+            40% { transform: scale(0.95) rotate(5deg); }
+            60% { transform: scale(0.95) rotate(-5deg); }
+            80% { transform: scale(0.95) rotate(5deg); }
+        }
+
+        .flash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .flash.correct {
+            background-color: rgba(76, 175, 80, 0.3);
+            animation: flashEffect 0.6s ease;
+        }
+
+        .flash.wrong {
+            background-color: rgba(244, 67, 54, 0.3);
+            animation: flashEffect 0.6s ease;
+        }
+
+        @keyframes flashEffect {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .question {
+            font-size: 24px;
+            color: #333;
+            margin: 20px 0;
+        }
+
+        input {
+            padding: 15px;
+            font-size: 18px;
+            width: 300px;
+            margin: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1a237e;
+            box-shadow: 0 0 15px rgba(26,35,126,0.2);
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            background-color: #283593;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .score {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #1a237e;
+        }
+
+        .chain-container {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .chain-title {
+            font-size: 16px;
+            color: #1a237e;
+            margin-bottom: 10px;
+        }
+
+        .chain {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+
+        .chain-item {
+            background-color: #e3f2fd;
+            border-radius: 5px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .chain-arrow {
+            color: #1a237e;
+            font-size: 14px;
+            margin: 0 2px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="game-container">
+
+        <div class="effect-container">
+            <div class="flash" id="effectFlash"></div>
+        </div>
+
+        <h1>What Beats Rock?</h1>
+
+        <div class="score">
+            Score: <span id="score">0</span>
+        </div>
+
+        <div class="item-emoji" id="currentEmoji"></div>
+
+        <p class="question">
+            What beats <span id="currentItem"></span>?
+        </p>
+
+        <input
+            type="text"
+            id="answerInput"
+            placeholder="Type your answer..."
+            autocomplete="off"
+        >
+
+        <button onclick="checkAnswer()">Submit</button>
+
+        <div class="chain-container">
+            <div class="chain-title">Chain so far:</div>
+            <div id="chain" class="chain"></div>
+        </div>
+
+    </div>
+
+    <script>
+        const gameSequence = [
+            {
+                emoji: "🪨",
+                name: "rock",
+                beats: ["paper", "hammer", "dynamite"],
+                answer_emoji: {
+                    "paper": "📜",
+                    "hammer": "🔨",
+                    "dynamite": "🧨"
+                }
+            },
+            {
+                emoji: "📜",
+                name: "paper",
+                beats: ["scissors", "fire", "water"],
+                answer_emoji: {
+                    "scissors": "✂️",
+                    "fire": "🔥",
+                    "water": "💧"
+                }
+            },
+            {
+                emoji: "✂️",
+                name: "scissors",
+                beats: ["rock", "hammer", "magnet"],
+                answer_emoji: {
+                    "rock": "🪨",
+                    "hammer": "🔨",
+                    "magnet": "🧲"
+                }
+            },
+            {
+                emoji: "🔥",
+                name: "fire",
+                beats: ["water", "sand", "extinguisher"],
+                answer_emoji: {
+                    "water": "💧",
+                    "sand": "🏖️",
+                    "extinguisher": "🧯"
+                }
+            },
+            {
+                emoji: "💧",
+                name: "water",
+                beats: ["sun", "lightning", "wind"],
+                answer_emoji: {
+                    "sun": "☀️",
+                    "lightning": "⚡️",
+                    "wind": "🌪️"
+                }
+            },
+            {
+                emoji: "🧲",
+                name: "magnet",
+                beats: ["robot", "metal", "compass"],
+                answer_emoji: {
+                    "robot": "🤖",
+                    "metal": "⚙️",
+                    "compass": "🧭"
+                }
+            },
+            {
+                emoji: "🌪️",
+                name: "wind",
+                beats: ["tree", "leaf", "kite"],
+                answer_emoji: {
+                    "tree": "🌳",
+                    "leaf": "🍃",
+                    "kite": "🪁"
+                }
+            },
+            {
+                emoji: "⚡️",
+                name: "lightning",
+                beats: ["tree", "electronics", "antenna"],
+                answer_emoji: {
+                    "tree": "🌳",
+                    "electronics": "📱",
+                    "antenna": "📡"
+                }
+            },
+            {
+                emoji: "🤖",
+                name: "robot",
+                beats: ["water", "virus", "battery"],
+                answer_emoji: {
+                    "water": "💧",
+                    "virus": "🦠",
+                    "battery": "🔋"
+                }
+            },
+            {
+                emoji: "🧯",
+                name: "extinguisher",
+                beats: ["fire", "smoke", "heat"],
+                answer_emoji: {
+                    "fire": "🔥",
+                    "smoke": "💨",
+                    "heat": "🌡️"
+                }
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let chainItems = [];
+        let usedAnswers = new Set();
+
+        const emojiDisplay = document.getElementById("currentEmoji");
+        const itemDisplay = document.getElementById("currentItem");
+        const answerInput = document.getElementById("answerInput");
+        const scoreDisplay = document.getElementById("score");
+        const chainDisplay = document.getElementById("chain");
+        const effectFlash = document.getElementById("effectFlash");
+
+        function showEffect(isCorrect) {
+            emojiDisplay.className =
+                `item-emoji ${isCorrect ? "correct" : "wrong"}`;
+
+            effectFlash.className =
+                `flash ${isCorrect ? "correct" : "wrong"}`;
+
+            setTimeout(() => {
+                emojiDisplay.className = "item-emoji";
+                effectFlash.className = "flash";
+            }, 600);
+        }
+
+        function updateChain() {
+            let chainHTML = "";
+
+            chainItems.forEach((item, i) => {
+                chainHTML += `
+                    <div class="chain-item">
+                        ${item.question} → ${item.answer}
+                    </div>
+                    ${
+                        i < chainItems.length - 1
+                            ? '<span class="chain-arrow">→</span>'
+                            : ""
+                    }
+                `;
+            });
+
+            chainDisplay.innerHTML = chainHTML;
+        }
+
+        function getCurrentQuestion() {
+            return gameSequence[currentQuestionIndex];
+        }
+
+        function setNewQuestion() {
+            const question = getCurrentQuestion();
+
+            if (!question) {
+                emojiDisplay.textContent = "🎮";
+                itemDisplay.textContent = "Game Over!";
+                answerInput.style.display = "none";
+                return;
+            }
+
+            emojiDisplay.textContent = question.emoji;
+            itemDisplay.textContent = question.name;
+            answerInput.value = "";
+            answerInput.focus();
+        }
+
+        function checkAnswer() {
+            const answer = answerInput.value.trim().toLowerCase();
+            const question = getCurrentQuestion();
+
+            if (!answer) return;
+
+            if (usedAnswers.has(answer)) {
+                showEffect(false);
+                return;
+            }
+
+            if (question.beats.includes(answer)) {
+                score++;
+                scoreDisplay.textContent = score;
+
+                showEffect(true);
+
+                usedAnswers.add(answer);
+
+                chainItems.push({
+                    question: question.emoji,
+                    answer: question.answer_emoji[answer]
+                });
+
+                updateChain();
+
+                currentQuestionIndex++;
+
+                setTimeout(setNewQuestion, 600);
+            } else {
+                showEffect(false);
+            }
+
+            answerInput.value = "";
+        }
+
+        answerInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                checkAnswer();
+            }
+        });
+
+        setNewQuestion();
+    </script>
+
+</body>
+</html>
