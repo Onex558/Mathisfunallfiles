@@ -243,6 +243,66 @@ textarea::placeholder{
   background:var(--accent2);
 }
 
+/* AI NOTICE POPUP */
+
+.noticeOverlay{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:blur(8px);
+}
+
+.noticeBox{
+  width:min(500px,100%);
+  background:#111116;
+  border:1px solid #30303a;
+  border-radius:20px;
+  padding:30px;
+  text-align:center;
+  box-shadow:0 25px 80px rgba(0,0,0,.6);
+}
+
+.noticeIcon{
+  font-size:45px;
+  margin-bottom:10px;
+}
+
+.noticeBox h2{
+  margin:0 0 15px;
+  font-size:26px;
+}
+
+.noticeBox p{
+  color:#aaaab5;
+  line-height:1.6;
+  font-size:14px;
+}
+
+.noticeBox strong{
+  color:white;
+}
+
+.noticeBox button{
+  margin-top:12px;
+  width:100%;
+  padding:13px;
+  border:0;
+  border-radius:11px;
+  background:#735cff;
+  color:white;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.noticeBox button:hover{
+  background:#927fff;
+}
+
 @media(max-width:700px){
 
   .sidebar{
@@ -268,11 +328,51 @@ textarea::placeholder{
 
 <body>
 
+<!-- AI DISCLAIMER POPUP -->
+
+<div id="aiNotice" class="noticeOverlay">
+
+  <div class="noticeBox">
+
+    <div class="noticeIcon">🤖</div>
+
+    <h2>About Nova AI</h2>
+
+    <p>
+      Nova AI is a <strong>simulated AI</strong>
+      made with JavaScript.
+      It does not use a real AI model or API.
+    </p>
+
+    <p>
+      It can explain many built-in topics,
+      do basic math, remember information,
+      and help with certain questions,
+      but it has limits.
+    </p>
+
+    <p>
+      If Nova doesn't know how to answer something,
+      it will tell you that it
+      <strong>can't answer the question</strong>
+      instead of pretending it knows.
+    </p>
+
+    <button onclick="closeNotice()">
+      Got it
+    </button>
+
+  </div>
+
+</div>
+
 <div class="app">
 
 <aside class="sidebar">
 
-  <div class="logo">🤖 Nova AI</div>
+  <div class="logo">
+    🤖 Nova AI
+  </div>
 
   <button class="newChat" id="newChat">
     ＋ New Chat
@@ -383,7 +483,6 @@ id="send">
 
 /* =========================================================
    NOVA AI
-   LARGE LOCAL RESPONSE ENGINE
    ========================================================= */
 
 const input =
@@ -410,6 +509,18 @@ let memory =
 JSON.parse(
 localStorage.getItem("novaMemory") || "{}"
 );
+
+/* =========================================================
+   POPUP
+   ========================================================= */
+
+function closeNotice(){
+
+  document.getElementById(
+    "aiNotice"
+  ).style.display="none";
+
+}
 
 /* =========================================================
    UTILITIES
@@ -447,35 +558,35 @@ function clean(text){
 function addMessage(type,text){
 
   const welcome =
-  document.getElementById("welcome");
+    document.getElementById("welcome");
 
   if(welcome){
     welcome.remove();
   }
 
   const message =
-  document.createElement("div");
+    document.createElement("div");
 
   message.className =
-  "message "+type;
+    "message "+type;
 
   const avatar =
-  document.createElement("div");
+    document.createElement("div");
 
   avatar.className =
-  "avatar";
+    "avatar";
 
   avatar.textContent =
-  type==="user" ? "👤" : "🤖";
+    type==="user" ? "👤" : "🤖";
 
   const content =
-  document.createElement("div");
+    document.createElement("div");
 
   content.className =
-  "content";
+    "content";
 
   content.textContent =
-  text;
+    text;
 
   message.appendChild(avatar);
   message.appendChild(content);
@@ -483,26 +594,26 @@ function addMessage(type,text){
   messages.appendChild(message);
 
   chat.scrollTop =
-  chat.scrollHeight;
+    chat.scrollHeight;
 
   return content;
 
 }
 
 /* =========================================================
-   MATH ENGINE
+   MATH
    ========================================================= */
 
 function solveMath(text){
 
   let expression =
-  text
-    .replace(/what is/gi,"")
-    .replace(/calculate/gi,"")
-    .replace(/solve/gi,"")
-    .replace(/equals/gi,"")
-    .replace(/=/g,"")
-    .trim();
+    text
+      .replace(/what is/gi,"")
+      .replace(/calculate/gi,"")
+      .replace(/solve/gi,"")
+      .replace(/equals/gi,"")
+      .replace(/=/g,"")
+      .trim();
 
   if(
     !/^[0-9+\-*/().%\s]+$/.test(expression)
@@ -513,11 +624,11 @@ function solveMath(text){
   try{
 
     const result =
-    Function(
-      '"use strict";return ('+
-      expression+
-      ')'
-    )();
+      Function(
+        '"use strict";return ('+
+        expression+
+        ')'
+      )();
 
     if(
       typeof result==="number" &&
@@ -535,26 +646,21 @@ function solveMath(text){
 }
 
 /* =========================================================
-   KNOWLEDGE BASE
+   KNOWLEDGE
    ========================================================= */
 
 const knowledge = {
 
 gravity:{
-keywords:[
-"gravity",
-"gravitational force"
-],
+keywords:["gravity","gravitational force"],
 answer:
 "Gravity is a force that attracts objects with mass toward one another. On Earth, gravity pulls objects toward the planet's center. It is also what keeps the Moon in orbit around Earth and Earth in orbit around the Sun.",
 simple:
-"Gravity is basically the force that pulls things toward other things. Earth's gravity is why you fall when you jump."
+"Gravity is the force that pulls things toward other things. Earth's gravity is why you fall when you jump."
 },
 
 photosynthesis:{
-keywords:[
-"photosynthesis"
-],
+keywords:["photosynthesis"],
 answer:
 "Photosynthesis is the process plants use to convert light energy into chemical energy. Plants generally use light, water, and carbon dioxide to produce sugars while releasing oxygen.",
 simple:
@@ -562,10 +668,7 @@ simple:
 },
 
 atoms:{
-keywords:[
-"atom",
-"atoms"
-],
+keywords:["atom","atoms"],
 answer:
 "An atom is a basic unit of ordinary matter. It contains a nucleus made primarily of protons and neutrons, surrounded by electrons.",
 simple:
@@ -573,10 +676,7 @@ simple:
 },
 
 electricity:{
-keywords:[
-"electricity",
-"electric current"
-],
+keywords:["electricity","electric current"],
 answer:
 "Electricity involves electric charge and its movement. In an ordinary electrical circuit, a voltage difference provides the energy that drives electric current through conductive materials.",
 simple:
@@ -584,11 +684,7 @@ simple:
 },
 
 computer:{
-keywords:[
-"computer",
-"computers",
-"how computers work"
-],
+keywords:["computer","computers","how computers work"],
 answer:
 "A computer receives input, processes information using electronic circuits and software, stores data, and produces output. Modern computers use processors to execute instructions and memory and storage systems to hold data.",
 simple:
@@ -596,10 +692,7 @@ simple:
 },
 
 internet:{
-keywords:[
-"internet",
-"how the internet works"
-],
+keywords:["internet","how the internet works"],
 answer:
 "The Internet is a global network of interconnected networks. Devices communicate using standardized protocols such as IP and TCP, while applications such as the web use additional protocols including HTTP and HTTPS.",
 simple:
@@ -607,12 +700,7 @@ simple:
 },
 
 ai:{
-keywords:[
-"artificial intelligence",
-"artificial intelligence ai",
-"what is ai",
-" ai "
-],
+keywords:["artificial intelligence","artificial intelligence ai","what is ai"],
 answer:
 "Artificial intelligence is a broad field of computing focused on creating systems that can perform tasks associated with capabilities such as pattern recognition, language processing, planning, prediction, and decision-making.",
 simple:
@@ -620,10 +708,7 @@ simple:
 },
 
 javascript:{
-keywords:[
-"javascript",
-"js"
-],
+keywords:["javascript","js"],
 answer:
 "JavaScript is a programming language widely used to make websites interactive. It can modify webpage content, respond to user actions, communicate with servers, process data, and power applications outside the browser as well.",
 simple:
@@ -631,10 +716,7 @@ simple:
 },
 
 html:{
-keywords:[
-"html",
-"hypertext markup language"
-],
+keywords:["html","hypertext markup language"],
 answer:
 "HTML stands for HyperText Markup Language. It provides the structure and meaning of content on webpages using elements such as headings, paragraphs, links, images, forms, and sections.",
 simple:
@@ -642,10 +724,7 @@ simple:
 },
 
 css:{
-keywords:[
-"css",
-"cascading style sheets"
-],
+keywords:["css","cascading style sheets"],
 answer:
 "CSS stands for Cascading Style Sheets. It controls the presentation of HTML documents, including layout, spacing, typography, colors, animations, and responsive design.",
 simple:
@@ -653,10 +732,7 @@ simple:
 },
 
 ram:{
-keywords:[
-"ram",
-"random access memory"
-],
+keywords:["ram","random access memory"],
 answer:
 "RAM is temporary working memory used by a computer to hold data and programs that are actively being used. Unlike persistent storage, RAM normally loses its contents when power is removed.",
 simple:
@@ -664,12 +740,7 @@ simple:
 },
 
 storage:{
-keywords:[
-"storage",
-"ssd",
-"hard drive",
-"hdd"
-],
+keywords:["storage","ssd","hard drive","hdd"],
 answer:
 "Storage is persistent memory used to keep files, applications, and operating system data. SSDs store data using flash memory, while traditional hard drives use magnetic disks.",
 simple:
@@ -677,10 +748,7 @@ simple:
 },
 
 cpu:{
-keywords:[
-"cpu",
-"processor"
-],
+keywords:["cpu","processor"],
 answer:
 "The CPU, or central processing unit, executes instructions from computer programs. It performs operations and coordinates many of the tasks required to run software.",
 simple:
@@ -688,22 +756,15 @@ simple:
 },
 
 gpu:{
-keywords:[
-"gpu",
-"graphics card"
-],
+keywords:["gpu","graphics card"],
 answer:
 "A GPU, or graphics processing unit, is a processor designed for highly parallel workloads. GPUs are especially useful for graphics, simulations, and many machine-learning calculations.",
 simple:
-"A GPU is a processor that is especially good at doing lots of similar calculations at the same time, which makes it useful for graphics and some AI workloads."
+"A GPU is a processor that is especially good at doing lots of similar calculations at the same time."
 },
 
 programming:{
-keywords:[
-"programming",
-"coding",
-"program code"
-],
+keywords:["programming","coding","program code"],
 answer:
 "Programming is the process of creating instructions that computers can execute. Programmers use languages such as JavaScript, Python, C++, Java, and many others to express those instructions.",
 simple:
@@ -711,10 +772,7 @@ simple:
 },
 
 browser:{
-keywords:[
-"browser",
-"web browser"
-],
+keywords:["browser","web browser"],
 answer:
 "A web browser is software that retrieves and displays web content. Browsers interpret technologies such as HTML, CSS, and JavaScript and communicate with web servers over network protocols.",
 simple:
@@ -722,10 +780,7 @@ simple:
 },
 
 operating:{
-keywords:[
-"operating system",
-"os"
-],
+keywords:["operating system","os"],
 answer:
 "An operating system is core system software that manages hardware and provides services for applications. Examples include Windows, macOS, Linux, Android, and iOS.",
 simple:
@@ -733,10 +788,7 @@ simple:
 },
 
 moon:{
-keywords:[
-"moon",
-"earth moon"
-],
+keywords:["moon","earth moon"],
 answer:
 "The Moon is Earth's natural satellite. Its gravity affects ocean tides, and its orbit around Earth produces the changing positions we observe in the night sky.",
 simple:
@@ -744,10 +796,7 @@ simple:
 },
 
 sun:{
-keywords:[
-"sun",
-"the sun"
-],
+keywords:["sun","the sun"],
 answer:
 "The Sun is a star at the center of our solar system. It produces energy through nuclear fusion in its core and provides most of the energy driving Earth's climate and ecosystems.",
 simple:
@@ -755,10 +804,7 @@ simple:
 },
 
 solar:{
-keywords:[
-"solar system",
-"planets"
-],
+keywords:["solar system","planets"],
 answer:
 "Our solar system contains the Sun and the objects gravitationally bound to it, including eight recognized planets, dwarf planets, moons, asteroids, comets, and other smaller bodies.",
 simple:
@@ -766,10 +812,7 @@ simple:
 },
 
 dna:{
-keywords:[
-"dna",
-"genetics"
-],
+keywords:["dna","genetics"],
 answer:
 "DNA is a molecule that stores biological information. Its sequence contains instructions used by cells to build proteins and regulate many biological processes.",
 simple:
@@ -777,32 +820,23 @@ simple:
 },
 
 evolution:{
-keywords:[
-"evolution",
-"natural selection"
-],
+keywords:["evolution","natural selection"],
 answer:
 "Biological evolution is the change in inherited characteristics of populations across generations. Natural selection is one important mechanism through which traits associated with reproductive success can become more common.",
 simple:
-"Evolution means populations of living things change over many generations. Natural selection is one process that can cause those changes."
+"Evolution means populations of living things change over many generations."
 },
 
 water:{
-keywords:[
-"water",
-"h2o"
-],
+keywords:["water","h2o"],
 answer:
-"Water is a chemical compound made of hydrogen and oxygen, commonly represented as H₂O. It is essential to known life and has unusual physical properties that are important to Earth's environment.",
+"Water is a chemical compound made of hydrogen and oxygen, commonly represented as H₂O. It is essential to known life.",
 simple:
 "Water is H₂O: two hydrogen atoms and one oxygen atom."
 },
 
 history:{
-keywords:[
-"history",
-"historical"
-],
+keywords:["history","historical"],
 answer:
 "History is the study of past events and human societies using evidence such as documents, artifacts, oral traditions, archaeological remains, and other sources.",
 simple:
@@ -810,10 +844,7 @@ simple:
 },
 
 geography:{
-keywords:[
-"geography",
-"geographic"
-],
+keywords:["geography","geographic"],
 answer:
 "Geography studies Earth's places, environments, physical features, and human activity, including how people and environments interact.",
 simple:
@@ -821,10 +852,7 @@ simple:
 },
 
 economics:{
-keywords:[
-"economics",
-"economy"
-],
+keywords:["economics","economy"],
 answer:
 "Economics studies how people and societies use limited resources to produce, distribute, and consume goods and services.",
 simple:
@@ -834,22 +862,22 @@ simple:
 };
 
 /* =========================================================
-   FIND KNOWLEDGE
+   FIND TOPIC
    ========================================================= */
 
 function findKnowledge(text){
 
-  let best = null;
-  let score = 0;
+  let best=null;
+  let score=0;
 
   for(
     const key in knowledge
   ){
 
-    const item =
-    knowledge[key];
+    const item=
+      knowledge[key];
 
-    let current = 0;
+    let current=0;
 
     for(
       const keyword of item.keywords
@@ -862,18 +890,18 @@ function findKnowledge(text){
       ){
 
         current +=
-        keyword.length > 5
-        ? 3
-        : 1;
+          keyword.length>5
+          ? 3
+          : 1;
 
       }
 
     }
 
-    if(current > score){
+    if(current>score){
 
-      score = current;
-      best = item;
+      score=current;
+      best=item;
 
     }
 
@@ -884,17 +912,15 @@ function findKnowledge(text){
 }
 
 /* =========================================================
-   EXPLANATION MODE
+   EXPLANATION
    ========================================================= */
 
 function wantsSimple(text){
 
-  return (
+  return(
     text.includes("simply") ||
     text.includes("simple") ||
     text.includes("easy") ||
-    text.includes("like i m 10") ||
-    text.includes("like im 10") ||
     text.includes("for kids") ||
     text.includes("beginner")
   );
@@ -903,7 +929,7 @@ function wantsSimple(text){
 
 function wantsExplanation(text){
 
-  return (
+  return(
     text.includes("explain") ||
     text.includes("how does") ||
     text.includes("how do") ||
@@ -917,27 +943,24 @@ function wantsExplanation(text){
 }
 
 /* =========================================================
-   COMPARISON ENGINE
+   COMPARISON
    ========================================================= */
 
 function compareThings(text){
 
-  const match =
-  text.match(
-    /(?:difference between|compare)\s+(.+?)\s+(?:and|vs|versus)\s+(.+)/i
-  );
+  const match=
+    text.match(
+      /(?:difference between|compare)\s+(.+?)\s+(?:and|vs|versus)\s+(.+)/i
+    );
 
   if(!match){
     return null;
   }
 
-  const a =
-  match[1].trim();
+  const a=match[1].trim();
+  const b=match[2].trim();
 
-  const b =
-  match[2].trim();
-
-  const pairs = [
+  const pairs=[
 
     [
       "ram",
@@ -960,7 +983,7 @@ function compareThings(text){
     [
       "javascript",
       "python",
-      "JavaScript is widely used for web development and can also run outside browsers. Python is a general-purpose language commonly used for scripting, automation, data science, and many other tasks."
+      "JavaScript is widely used for web development, while Python is widely used for scripting, automation, data science, and many other tasks."
     ],
 
     [
@@ -975,20 +998,14 @@ function compareThings(text){
     const pair of pairs
   ){
 
-    const first =
-    pair[0];
-
-    const second =
-    pair[1];
-
     if(
       (
-        a.toLowerCase().includes(first) &&
-        b.toLowerCase().includes(second)
+        a.toLowerCase().includes(pair[0]) &&
+        b.toLowerCase().includes(pair[1])
       ) ||
       (
-        a.toLowerCase().includes(second) &&
-        b.toLowerCase().includes(first)
+        a.toLowerCase().includes(pair[1]) &&
+        b.toLowerCase().includes(pair[0])
       )
     ){
 
@@ -998,42 +1015,36 @@ function compareThings(text){
 
   }
 
-  return `A useful way to compare ${a} and ${b} is to look at their purpose, how they work, their advantages, and their limitations.`;
+  return `I can give a general comparison of ${a} and ${b}, but I don't have enough built-in information to make a detailed comparison.`;
 
 }
 
 /* =========================================================
-   SUMMARIZER
+   SUMMARIZE
    ========================================================= */
 
 function summarize(text){
 
-  const sentences =
-  text.match(
-    /[^.!?]+[.!?]+/g
-  );
+  const sentences=
+    text.match(
+      /[^.!?]+[.!?]+/g
+    );
 
   if(
     !sentences ||
-    sentences.length < 2
+    sentences.length<2
   ){
 
-    return "Give me a longer piece of text and I can identify its main ideas.";
+    return "I can't summarize that yet. Give me a longer piece of text.";
 
   }
 
-  const important =
-  sentences
-    .slice(0,Math.min(3,sentences.length))
-    .map(
-      s=>s.trim()
-    );
-
-  return (
-    "Summary:\n\n" +
-    important
+  return(
+    "Summary:\n\n"+
+    sentences
+      .slice(0,3)
       .map(
-        s=>"• "+s
+        s=>"• "+s.trim()
       )
       .join("\n")
   );
@@ -1041,25 +1052,24 @@ function summarize(text){
 }
 
 /* =========================================================
-   MAIN RESPONSE ENGINE
+   RESPONSE ENGINE
    ========================================================= */
 
 function respond(original){
 
-  const text =
-  clean(original);
+  const text=
+    clean(original);
 
   /* NAME */
 
-  const name =
-  original.match(
-    /(?:my name is|call me)\s+([a-zA-Z0-9_-]+)/i
-  );
+  const name=
+    original.match(
+      /(?:my name is|call me)\s+([a-zA-Z0-9_-]+)/i
+    );
 
   if(name){
 
-    memory.name =
-    name[1];
+    memory.name=name[1];
 
     saveMemory();
 
@@ -1069,8 +1079,8 @@ function respond(original){
 
   /* MATH */
 
-  const math =
-  solveMath(original);
+  const math=
+    solveMath(original);
 
   if(math!==null){
 
@@ -1091,55 +1101,43 @@ function respond(original){
 
   }
 
-  /* SUMMARIZE */
+  /* SUMMARY */
 
   if(
-    text.startsWith("summarize ") ||
-    text.startsWith("summary of ")
+    text.startsWith("summarize ")
   ){
 
     return summarize(
-      original
-        .replace(
-          /^summarize\s*/i,
-          ""
-        )
+      original.replace(
+        /^summarize\s*/i,
+        ""
+      )
     );
 
   }
 
   /* COMPARISON */
 
-  const comparison =
-  compareThings(text);
+  const comparison=
+    compareThings(text);
 
   if(comparison){
-
     return comparison;
-
   }
 
   /* KNOWLEDGE */
 
-  const topic =
-  findKnowledge(text);
+  const topic=
+    findKnowledge(text);
 
   if(topic){
 
-    if(
-      wantsSimple(text)
-    ){
-
+    if(wantsSimple(text)){
       return topic.simple;
-
     }
 
-    if(
-      wantsExplanation(text)
-    ){
-
+    if(wantsExplanation(text)){
       return topic.answer;
-
     }
 
     return topic.answer;
@@ -1187,7 +1185,7 @@ function respond(original){
     text.includes("what are you")
   ){
 
-    return "I'm Nova AI, a self-contained browser-based AI simulation. I use JavaScript rules, a built-in knowledge base, memory, and text analysis instead of an actual language model.";
+    return "I'm Nova AI, a self-contained browser-based AI simulation. I use JavaScript rules and a built-in knowledge base instead of an actual language model.";
 
   }
 
@@ -1228,7 +1226,7 @@ function respond(original){
     text.startsWith("why ")
   ){
 
-    return "The reason usually depends on the specific situation. Give me a little more context and I can break the idea down step by step.";
+    return "I can't answer that question accurately with my current built-in knowledge. Try asking about the specific topic involved.";
 
   }
 
@@ -1238,7 +1236,7 @@ function respond(original){
     text.startsWith("how ")
   ){
 
-    return "I can help break that into steps. Tell me what you're trying to accomplish and I'll explain a practical approach.";
+    return "I can't answer that question accurately with my current built-in knowledge. I don't have access to a real AI model or the internet.";
 
   }
 
@@ -1266,10 +1264,9 @@ function respond(original){
     text==="time"
   ){
 
-    return (
-      "The current time according to your browser is " +
-      new Date().toLocaleTimeString() +
-      "."
+    return(
+      "The current time according to your browser is "+
+      new Date().toLocaleTimeString()+"."
     );
 
   }
@@ -1281,10 +1278,9 @@ function respond(original){
     text.includes("what day is it")
   ){
 
-    return (
-      "Today's date according to your browser is " +
-      new Date().toLocaleDateString() +
-      "."
+    return(
+      "Today's date according to your browser is "+
+      new Date().toLocaleDateString()+"."
     );
 
   }
@@ -1298,7 +1294,7 @@ function respond(original){
 
     return `I can:
 
-• Explain common concepts
+• Explain built-in topics
 • Explain things simply
 • Answer common questions
 • Do basic math
@@ -1309,32 +1305,13 @@ function respond(original){
 • Remember information you tell me
 • Continue a conversation
 
-I'm a simulated AI, so I don't have the unlimited knowledge of a real language model.`;
+I'm a simulated AI, so I have limits.`;
 
   }
 
-  /* FALLBACK */
+  /* UNKNOWN */
 
-  if(
-    text.endsWith("?")
-  ){
-
-    return random([
-      "That's a good question. I don't have enough built-in information to answer that accurately yet.",
-      "I can try to help, but I need a little more context.",
-      "Interesting question. Can you give me a bit more detail?",
-      "I don't have that topic in my local knowledge base yet."
-    ]);
-
-  }
-
-  return random([
-    "Interesting. Tell me more.",
-    "Got it. What would you like to do next?",
-    "I understand. Can you give me more details?",
-    "That sounds interesting. Let's break it down.",
-    "Okay! I'm listening."
-  ]);
+  return "I can't answer this question with my current built-in knowledge. I'm a simulated AI and don't have access to a real AI model or the internet.";
 
 }
 
@@ -1344,8 +1321,8 @@ I'm a simulated AI, so I don't have the unlimited knowledge of a real language m
 
 function sendMessage(){
 
-  const text =
-  input.value.trim();
+  const text=
+    input.value.trim();
 
   if(!text){
     return;
@@ -1364,37 +1341,37 @@ function sendMessage(){
     text:text
   });
 
-  const ai =
-  addMessage(
-    "ai",
-    "Thinking..."
+  const ai=
+    addMessage(
+      "ai",
+      "Thinking..."
+    );
+
+  ai.classList.add(
+    "typing"
   );
-
-  ai.classList.add("typing");
-
-  const delay =
-  250 +
-  Math.random()*600;
 
   setTimeout(()=>{
 
-    const response =
-    respond(text);
+    const response=
+      respond(text);
 
-    ai.classList.remove("typing");
+    ai.classList.remove(
+      "typing"
+    );
 
-    ai.textContent =
-    response;
+    ai.textContent=
+      response;
 
     conversation.push({
       role:"ai",
       text:response
     });
 
-    chat.scrollTop =
-    chat.scrollHeight;
+    chat.scrollTop=
+      chat.scrollHeight;
 
-  },delay);
+  },300+Math.random()*500);
 
 }
 
@@ -1520,25 +1497,21 @@ input.addEventListener(
   }
 );
 
-/* =========================================================
-   SUGGESTION BUTTONS
-   ========================================================= */
-
 document.addEventListener(
   "click",
   event=>{
 
-    const button =
-    event.target.closest(
-      ".suggestion"
-    );
+    const button=
+      event.target.closest(
+        ".suggestion"
+      );
 
     if(!button){
       return;
     }
 
-    input.value =
-    button.dataset.question;
+    input.value=
+      button.dataset.question;
 
     sendMessage();
 
