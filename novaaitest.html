@@ -8,148 +8,233 @@
 <style>
 *{box-sizing:border-box}
 
-:root{
-  --bg:#07070a;
-  --panel:#101015;
-  --panel2:#17171e;
-  --border:#292932;
-  --text:#f5f5f7;
-  --muted:#92929e;
-  --accent:#735cff;
-  --accent2:#927fff;
-  --green:#55df91;
-  --red:#ff6b6b;
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Inter,Arial,sans-serif;
+  background:#08080c;
+  color:#fff;
 }
 
-body{
-  margin:0;
-  height:100vh;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 50% -20%,#251b49 0,#0b0b10 45%,#07070a 100%);
-  color:var(--text);
-  font-family:Arial,Helvetica,sans-serif;
+button,
+textarea,
+select{
+  font:inherit;
 }
+
+button{
+  cursor:pointer;
+}
+
+/* APP */
 
 .app{
-  height:100vh;
+  width:100%;
+  height:100%;
   display:flex;
 }
 
+/* SIDEBAR */
+
 .sidebar{
-  width:260px;
-  background:rgba(9,9,13,.97);
-  border-right:1px solid var(--border);
-  padding:18px;
+  width:250px;
+  height:100%;
+  background:#0c0c11;
+  border-right:1px solid #25252d;
+  padding:16px;
   display:flex;
   flex-direction:column;
 }
 
-.logo{
-  font-size:23px;
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:21px;
   font-weight:900;
-  margin-bottom:20px;
+  margin-bottom:18px;
 }
 
-.sideButton{
+.brandIcon{
+  width:34px;
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+  background:linear-gradient(
+    135deg,
+    #725cff,
+    #9a7dff
+  );
+}
+
+.newChat{
   width:100%;
   padding:12px;
+  border:1px solid #2b2b34;
   border-radius:11px;
-  border:1px solid var(--border);
-  background:var(--panel);
-  color:white;
-  cursor:pointer;
+  background:#14141a;
+  color:#fff;
   font-weight:800;
-  margin-bottom:9px;
+  margin-bottom:12px;
 }
 
-.sideButton:hover{
-  background:var(--panel2);
+.newChat:hover{
+  background:#1b1b23;
 }
 
-.modeTitle{
-  margin-top:15px;
-  margin-bottom:8px;
-  color:var(--muted);
-  font-size:12px;
-  font-weight:800;
+.sectionTitle{
+  color:#777783;
+  font-size:11px;
+  font-weight:900;
   text-transform:uppercase;
+  margin:12px 4px 7px;
 }
 
-.modeSelect{
+.mode{
   width:100%;
   padding:11px;
+  border:1px solid #2b2b34;
   border-radius:10px;
-  border:1px solid var(--border);
-  background:var(--panel2);
-  color:white;
+  background:#14141a;
+  color:#fff;
   outline:none;
 }
 
-.info{
-  margin-top:auto;
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.7;
+.sidebarButton{
+  width:100%;
+  padding:11px;
+  border:1px solid #2b2b34;
+  border-radius:10px;
+  background:#14141a;
+  color:#ddd;
+  margin-top:8px;
 }
+
+.sidebarButton:hover{
+  background:#1b1b23;
+}
+
+.sidebarBottom{
+  margin-top:auto;
+  color:#73737e;
+  font-size:12px;
+  line-height:1.65;
+}
+
+/* MAIN */
 
 .main{
   flex:1;
   min-width:0;
+  height:100%;
   display:flex;
   flex-direction:column;
 }
 
-.topbar{
+/* HEADER */
+
+.header{
   height:60px;
-  border-bottom:1px solid var(--border);
+  padding:0 20px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:0 20px;
-  background:rgba(8,8,12,.72);
+  border-bottom:1px solid #25252d;
+  background:#0a0a0f;
 }
 
-.model{
+.headerName{
   font-weight:900;
 }
 
-.status{
+.headerStatus{
+  color:#58df93;
   font-size:12px;
-  color:var(--green);
 }
+
+/* CHAT */
 
 .chat{
   flex:1;
   overflow-y:auto;
-  padding:30px 15px 150px;
+  padding:30px 16px 150px;
 }
 
-.messages{
+.chatInner{
   width:min(900px,100%);
   margin:auto;
 }
 
+/* WELCOME */
+
 .welcome{
+  min-height:55vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
   text-align:center;
-  margin:10vh auto 40px;
-  max-width:700px;
+}
+
+.welcomeLogo{
+  width:70px;
+  height:70px;
+  border-radius:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:36px;
+  background:linear-gradient(
+    135deg,
+    #725cff,
+    #9a7dff
+  );
+  box-shadow:
+    0 15px 50px
+    rgba(115,92,255,.22);
 }
 
 .welcome h1{
-  margin:0 0 12px;
-  font-size:clamp(40px,7vw,70px);
-  letter-spacing:-3px;
+  margin:18px 0 8px;
+  font-size:48px;
+  letter-spacing:-2px;
 }
 
 .welcome p{
-  color:var(--muted);
-  line-height:1.6;
+  max-width:600px;
+  color:#898994;
+  line-height:1.65;
 }
+
+.quick{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px;
+  margin-top:20px;
+}
+
+.quick button{
+  padding:10px 14px;
+  border:1px solid #292932;
+  background:#121218;
+  color:#ddd;
+  border-radius:20px;
+}
+
+.quick button:hover{
+  background:#1b1b23;
+}
+
+/* MESSAGE */
 
 .message{
   display:flex;
-  gap:13px;
+  gap:12px;
   margin:25px 0;
 }
 
@@ -157,90 +242,106 @@ body{
   width:36px;
   height:36px;
   min-width:36px;
-  border-radius:10px;
-  background:var(--panel2);
   display:flex;
   align-items:center;
   justify-content:center;
+  border-radius:10px;
+  background:#17171e;
 }
 
 .user .avatar{
-  background:var(--accent);
+  background:#725cff;
 }
 
-.content{
+.messageBody{
   flex:1;
   min-width:0;
+}
+
+.messageLabel{
+  font-size:11px;
+  color:#777783;
+  font-weight:900;
+  margin-bottom:5px;
+}
+
+.messageText{
   line-height:1.7;
+  color:#e2e2e8;
   white-space:pre-wrap;
   overflow-wrap:anywhere;
 }
 
-.ai .content{
-  color:#dedee7;
+.user .messageText{
+  color:#fff;
 }
 
 .badge{
   display:inline-block;
-  margin-bottom:8px;
-  padding:3px 8px;
-  border-radius:8px;
-  font-size:10px;
+  padding:3px 7px;
+  border-radius:6px;
+  background:#201c32;
+  color:#a89aff;
+  font-size:9px;
   font-weight:900;
-  background:#201d31;
-  color:#aaa1ff;
+  margin-bottom:8px;
 }
+
+/* SEARCH */
 
 .searchButton{
   margin-top:13px;
-  padding:10px 15px;
+  padding:10px 14px;
   border-radius:10px;
-  border:1px solid #3a315f;
-  background:#17142b;
-  color:white;
-  cursor:pointer;
+  border:1px solid #39305d;
+  background:#17132a;
+  color:#fff;
   font-weight:800;
 }
 
 .searchButton:hover{
-  background:#241e42;
+  background:#241d40;
 }
+
+/* INPUT */
 
 .inputArea{
   position:fixed;
-  left:260px;
+  left:250px;
   right:0;
   bottom:0;
   padding:18px;
-  background:linear-gradient(
-    transparent,
-    rgba(7,7,10,.98) 32%
-  );
+  background:
+    linear-gradient(
+      transparent,
+      #08080c 35%
+    );
 }
 
-.inputBox{
+.composer{
   width:min(900px,100%);
   margin:auto;
-  padding:9px;
   display:flex;
-  gap:9px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:18px;
-  box-shadow:0 10px 45px rgba(0,0,0,.35);
+  gap:8px;
+  padding:8px;
+  border:1px solid #292932;
+  background:#111116;
+  border-radius:17px;
+  box-shadow:
+    0 12px 50px
+    rgba(0,0,0,.45);
 }
 
 textarea{
   flex:1;
   min-height:46px;
-  max-height:160px;
+  max-height:150px;
   resize:none;
+  padding:12px;
   border:0;
   outline:0;
   background:transparent;
-  color:white;
-  font:inherit;
-  padding:12px;
+  color:#fff;
 }
 
 textarea::placeholder{
@@ -248,25 +349,26 @@ textarea::placeholder{
 }
 
 .send{
-  width:48px;
-  height:48px;
+  width:47px;
+  height:47px;
   align-self:flex-end;
   border:0;
-  border-radius:12px;
-  background:var(--accent);
-  color:white;
-  font-size:19px;
-  cursor:pointer;
+  border-radius:11px;
+  background:#725cff;
+  color:#fff;
+  font-size:20px;
 }
 
 .send:hover{
-  background:var(--accent2);
+  background:#8b77ff;
 }
+
+/* LOADING */
 
 .loading{
   position:fixed;
   inset:0;
-  z-index:50;
+  z-index:100;
   display:none;
   align-items:center;
   justify-content:center;
@@ -274,35 +376,37 @@ textarea::placeholder{
   backdrop-filter:blur(8px);
 }
 
-.loadingBox{
-  width:min(470px,90%);
+.loadingCard{
+  width:min(460px,90%);
   background:#111116;
-  border:1px solid var(--border);
-  border-radius:20px;
+  border:1px solid #292932;
+  border-radius:18px;
   padding:25px;
 }
 
-.loadingBox h2{
-  margin-top:0;
+.loadingCard h2{
+  margin:0 0 10px;
 }
 
 .loadingText{
-  color:var(--muted);
+  color:#898994;
   margin-bottom:15px;
 }
 
 .progress{
-  height:9px;
+  height:8px;
   background:#24242c;
   border-radius:20px;
   overflow:hidden;
 }
 
-.progressFill{
+.progressBar{
   width:0%;
   height:100%;
-  background:var(--accent);
+  background:#725cff;
 }
+
+/* MOBILE */
 
 @media(max-width:700px){
 
@@ -314,8 +418,12 @@ textarea::placeholder{
     left:0;
   }
 
-  .topbar{
+  .header{
     padding:0 14px;
+  }
+
+  .welcome h1{
+    font-size:40px;
   }
 
 }
@@ -324,23 +432,27 @@ textarea::placeholder{
 
 <body>
 
+<!-- LOADING -->
+
 <div class="loading" id="loading">
 
-  <div class="loadingBox">
+  <div class="loadingCard">
 
     <h2>🧠 Loading Real AI</h2>
 
     <div
       class="loadingText"
       id="loadingText">
-      Preparing the model...
+      Preparing the local model...
     </div>
 
     <div class="progress">
+
       <div
-        class="progressFill"
-        id="progressFill">
+        class="progressBar"
+        id="progressBar">
       </div>
+
     </div>
 
   </div>
@@ -350,31 +462,33 @@ textarea::placeholder{
 
 <div class="app">
 
+  <!-- SIDEBAR -->
+
   <aside class="sidebar">
 
-    <div class="logo">
-      🤖 Nova AI
+    <div class="brand">
+
+      <div class="brandIcon">
+        ✦
+      </div>
+
+      Nova AI
+
     </div>
 
     <button
-      class="sideButton"
-      onclick="newChat()">
-      ＋ New Chat
+      class="newChat"
+      id="newChat">
+      ＋ New chat
     </button>
 
-    <button
-      class="sideButton"
-      onclick="clearMemory()">
-      🧠 Clear Memory
-    </button>
-
-    <div class="modeTitle">
+    <div class="sectionTitle">
       AI Mode
     </div>
 
     <select
-      id="mode"
-      class="modeSelect">
+      class="mode"
+      id="mode">
 
       <option value="auto">
         ⚡ Auto
@@ -391,85 +505,120 @@ textarea::placeholder{
     </select>
 
     <button
-      class="sideButton"
-      id="loadReal"
-      style="margin-top:10px">
+      class="sidebarButton"
+      id="loadAI">
       🧠 Load Real AI
     </button>
 
-    <div class="info">
+    <button
+      class="sidebarButton"
+      id="clearMemory">
+      🧹 Clear Memory
+    </button>
 
-      <b>Nova AI</b><br><br>
+    <div class="sidebarBottom">
 
-      ⚡ Auto mode<br>
-      🤖 Local simulated AI<br>
-      🧠 WebGPU real AI<br>
+      <b>Nova AI</b><br>
+
+      Hybrid browser AI<br><br>
+
+      🤖 Fake AI — instant<br>
+      🧠 Real AI — WebGPU<br>
       🌐 Web search fallback<br><br>
 
       No API key required for
-      the local modes.
+      Fake AI or local WebGPU AI.
 
     </div>
 
   </aside>
 
 
+  <!-- MAIN -->
+
   <main class="main">
 
-    <div class="topbar">
+    <header class="header">
 
-      <div class="model">
+      <div class="headerName">
         Nova AI
       </div>
 
       <div
-        class="status"
+        class="headerStatus"
         id="status">
         ● Fake AI ready
       </div>
 
-    </div>
+    </header>
 
 
-    <div
+    <!-- CHAT -->
+
+    <section
       class="chat"
       id="chat">
 
       <div
-        class="messages"
-        id="messages">
+        class="chatInner"
+        id="chatInner">
 
         <div
           class="welcome"
           id="welcome">
 
-          <h1>Nova</h1>
+          <div class="welcomeLogo">
+            ✦
+          </div>
+
+          <h1>
+            How can I help?
+          </h1>
 
           <p>
-            Your hybrid browser AI.
+            I'm Nova, a hybrid browser AI.
+            I can use a built-in simulated AI,
+            a local WebGPU model, or send you
+            to the web when I don't know something.
           </p>
 
-          <p>
-            Use <b>Fake AI</b> for instant answers
-            or load <b>Real AI</b> to run a language
-            model locally with WebGPU.
-          </p>
+          <div class="quick">
+
+            <button data-q="Explain gravity simply">
+              Explain gravity
+            </button>
+
+            <button data-q="What is artificial intelligence?">
+              What is AI?
+            </button>
+
+            <button data-q="What is JavaScript?">
+              JavaScript
+            </button>
+
+            <button data-q="How do computers work?">
+              Computers
+            </button>
+
+          </div>
 
         </div>
 
       </div>
 
-    </div>
+    </section>
 
+
+    <!-- INPUT -->
 
     <div class="inputArea">
 
-      <div class="inputBox">
+      <div class="composer">
 
         <textarea
           id="input"
-          placeholder="Ask Nova anything..."
-          rows="1"></textarea>
+          rows="1"
+          placeholder="Message Nova AI..."></textarea>
 
         <button
           class="send"
@@ -488,9 +637,11 @@ textarea::placeholder{
 
 <script type="module">
 
-/* =====================================================
-   OPTIONAL REAL AI
-   ===================================================== */
+/*
+=========================================================
+OPTIONAL REAL AI
+=========================================================
+*/
 
 import {
   pipeline,
@@ -501,9 +652,11 @@ env.allowLocalModels = false;
 env.useBrowserCache = true;
 
 
-/* =====================================================
-   ELEMENTS
-   ===================================================== */
+/*
+=========================================================
+ELEMENTS
+=========================================================
+*/
 
 const input =
   document.getElementById("input");
@@ -511,8 +664,8 @@ const input =
 const send =
   document.getElementById("send");
 
-const messages =
-  document.getElementById("messages");
+const chatInner =
+  document.getElementById("chatInner");
 
 const chat =
   document.getElementById("chat");
@@ -523,25 +676,33 @@ const mode =
 const status =
   document.getElementById("status");
 
+const loadAIButton =
+  document.getElementById("loadAI");
+
+const clearMemoryButton =
+  document.getElementById("clearMemory");
+
+const newChatButton =
+  document.getElementById("newChat");
+
 const loading =
   document.getElementById("loading");
 
 const loadingText =
   document.getElementById("loadingText");
 
-const progressFill =
-  document.getElementById("progressFill");
-
-const loadReal =
-  document.getElementById("loadReal");
+const progressBar =
+  document.getElementById("progressBar");
 
 
-/* =====================================================
-   STATE
-   ===================================================== */
+/*
+=========================================================
+STATE
+=========================================================
+*/
 
 let realAI = null;
-let loadingAI = false;
+let realAILoading = false;
 
 let conversation = [];
 
@@ -553,9 +714,11 @@ let memory =
   );
 
 
-/* =====================================================
-   STATUS
-   ===================================================== */
+/*
+=========================================================
+STATUS
+=========================================================
+*/
 
 function setStatus(text){
 
@@ -565,9 +728,11 @@ function setStatus(text){
 }
 
 
-/* =====================================================
-   MEMORY
-   ===================================================== */
+/*
+=========================================================
+MEMORY
+=========================================================
+*/
 
 function saveMemory(){
 
@@ -579,15 +744,27 @@ function saveMemory(){
 }
 
 
-/* =====================================================
-   ADD MESSAGE
-   ===================================================== */
+/*
+=========================================================
+SCROLL
+=========================================================
+*/
 
-function addMessage(
-  type,
-  text,
-  badgeText=""
-){
+function scrollBottom(){
+
+  chat.scrollTop =
+    chat.scrollHeight;
+
+}
+
+
+/*
+=========================================================
+REMOVE WELCOME
+=========================================================
+*/
+
+function removeWelcome(){
 
   const welcome =
     document.getElementById(
@@ -597,6 +774,23 @@ function addMessage(
   if(welcome){
     welcome.remove();
   }
+
+}
+
+
+/*
+=========================================================
+ADD MESSAGE
+=========================================================
+*/
+
+function addMessage(
+  type,
+  text,
+  badge=""
+){
+
+  removeWelcome();
 
   const row =
     document.createElement("div");
@@ -613,62 +807,74 @@ function addMessage(
   avatar.textContent =
     type === "user"
       ? "👤"
-      : "🤖";
+      : "✦";
 
-  const content =
+  const body =
     document.createElement("div");
 
-  content.className =
-    "content";
+  body.className =
+    "messageBody";
 
-  if(badgeText){
+  if(badge){
 
-    const badge =
+    const badgeElement =
       document.createElement("div");
 
-    badge.className =
+    badgeElement.className =
       "badge";
 
-    badge.textContent =
-      badgeText;
+    badgeElement.textContent =
+      badge;
 
-    content.appendChild(
-      badge
+    body.appendChild(
+      badgeElement
     );
 
   }
 
-  const textNode =
+  const textElement =
     document.createElement("div");
 
-  textNode.textContent =
+  textElement.className =
+    "messageText";
+
+  textElement.textContent =
     text;
 
-  content.appendChild(
-    textNode
+  body.appendChild(
+    textElement
   );
 
-  row.appendChild(avatar);
-  row.appendChild(content);
+  row.appendChild(
+    avatar
+  );
 
-  messages.appendChild(row);
+  row.appendChild(
+    body
+  );
+
+  chatInner.appendChild(
+    row
+  );
 
   scrollBottom();
 
-  return content;
+  return textElement;
 
 }
 
 
-/* =====================================================
-   SEARCH WEB
-   ===================================================== */
+/*
+=========================================================
+WEB SEARCH
+=========================================================
+*/
 
-function searchWeb(question){
+function searchWeb(query){
 
   const url =
     "https://www.google.com/search?q=" +
-    encodeURIComponent(question);
+    encodeURIComponent(query);
 
   window.open(
     url,
@@ -679,12 +885,14 @@ function searchWeb(question){
 }
 
 
-/* =====================================================
-   SEARCH BUTTON
-   ===================================================== */
+/*
+=========================================================
+SEARCH BUTTON
+=========================================================
+*/
 
 function addSearchButton(
-  content,
+  body,
   question
 ){
 
@@ -700,99 +908,86 @@ function addSearchButton(
   button.onclick =
     () => searchWeb(question);
 
-  content.appendChild(
+  body.appendChild(
     document.createElement("br")
   );
 
-  content.appendChild(
+  body.appendChild(
     button
   );
 
 }
 
 
-/* =====================================================
-   SCROLL
-   ===================================================== */
+/*
+=========================================================
+FAKE AI DATABASE
+=========================================================
+*/
 
-function scrollBottom(){
+const knowledge = [
 
-  chat.scrollTop =
-    chat.scrollHeight;
-
-}
-
-
-/* =====================================================
-   FAKE AI KNOWLEDGE
-   ===================================================== */
-
-const topics = {
-
-  gravity:{
-    keys:["gravity"],
+  {
+    keys:[
+      "gravity"
+    ],
     answer:
-      "Gravity is the force that attracts objects with mass toward each other. On Earth, it pulls objects toward the planet's center."
+      "Gravity is the force that attracts objects with mass toward one another. On Earth, gravity pulls objects toward the planet's center."
   },
 
-  ai:{
+  {
     keys:[
       "artificial intelligence",
       "what is ai"
     ],
     answer:
-      "Artificial intelligence is a field of computing that creates systems capable of tasks such as recognizing patterns, processing language, making predictions, and making decisions."
+      "Artificial intelligence is a field of computing focused on creating systems that can perform tasks involving things like recognizing patterns, processing language, making predictions, and making decisions."
   },
 
-  computer:{
-    keys:[
-      "computer",
-      "how computers work"
-    ],
-    answer:
-      "A computer takes input, processes it using instructions, stores information, and produces output. The CPU executes instructions while RAM provides temporary working memory."
-  },
-
-  javascript:{
+  {
     keys:[
       "javascript",
       "what is js"
     ],
     answer:
-      "JavaScript is a programming language commonly used to make websites interactive. It can modify webpages, respond to events, process data, and run applications."
+      "JavaScript is a programming language commonly used to make websites interactive. It can change webpage content, respond to events, process data, and power applications."
   },
 
-  html:{
-    keys:["html"],
-    answer:
-      "HTML stands for HyperText Markup Language. It provides the structure of a webpage using elements such as headings, paragraphs, links, images, and forms."
-  },
-
-  css:{
-    keys:["css"],
-    answer:
-      "CSS stands for Cascading Style Sheets. It controls the appearance and layout of HTML, including colors, spacing, fonts, animations, and responsive layouts."
-  },
-
-  internet:{
+  {
     keys:[
-      "internet",
-      "how the internet works"
+      "html"
     ],
     answer:
-      "The Internet is a worldwide network of interconnected networks. Devices communicate using standardized networking protocols."
+      "HTML stands for HyperText Markup Language. It provides the structure of webpages using elements such as headings, paragraphs, links, images, and forms."
   },
 
-  cpu:{
+  {
+    keys:[
+      "css"
+    ],
+    answer:
+      "CSS stands for Cascading Style Sheets. It controls how webpages look, including colors, spacing, fonts, layouts, animations, and responsive design."
+  },
+
+  {
+    keys:[
+      "computer",
+      "how computers work"
+    ],
+    answer:
+      "A computer receives input, processes information using instructions, stores data, and produces output. The CPU executes instructions while RAM provides temporary working memory."
+  },
+
+  {
     keys:[
       "cpu",
       "processor"
     ],
     answer:
-      "The CPU, or central processing unit, executes instructions and performs calculations required by computer programs."
+      "The CPU, or central processing unit, executes instructions and performs calculations needed by computer programs."
   },
 
-  gpu:{
+  {
     keys:[
       "gpu",
       "graphics card"
@@ -801,29 +996,57 @@ const topics = {
       "A GPU is a processor designed to perform many calculations in parallel. GPUs are especially useful for graphics and other highly parallel workloads."
   },
 
-  ram:{
+  {
     keys:[
-      "ram",
-      "random access memory"
+      "ram"
     ],
     answer:
-      "RAM is temporary working memory used by programs while they are running. More RAM can allow a computer to keep more active data readily available."
+      "RAM is temporary working memory used by programs while they are running. Think of it as a computer's short-term workspace."
   },
 
-  photosynthesis:{
+  {
+    keys:[
+      "internet",
+      "how the internet works"
+    ],
+    answer:
+      "The Internet is a worldwide network of interconnected networks. Devices communicate using standardized networking protocols."
+  },
+
+  {
     keys:[
       "photosynthesis"
     ],
     answer:
       "Photosynthesis is the process plants use to convert light energy into chemical energy. Plants generally use sunlight, water, and carbon dioxide to produce sugars and release oxygen."
+  },
+
+  {
+    keys:[
+      "dna",
+      "genetics"
+    ],
+    answer:
+      "DNA is a molecule that stores biological information used by cells."
+  },
+
+  {
+    keys:[
+      "water",
+      "h2o"
+    ],
+    answer:
+      "Water is a chemical compound made from hydrogen and oxygen and is commonly represented as H₂O."
   }
 
-};
+];
 
 
-/* =====================================================
-   FAKE AI
-   ===================================================== */
+/*
+=========================================================
+FAKE AI
+=========================================================
+*/
 
 function fakeAI(question){
 
@@ -833,24 +1056,28 @@ function fakeAI(question){
       .trim();
 
 
-  /* GREETINGS */
+  /*
+  GREETING
+  */
 
   if(
     /\b(hi|hello|hey|yo|sup)\b/.test(q)
   ){
 
     return {
+      known:true,
       answer:
         memory.name
           ? `Hey ${memory.name}! How can I help?`
-          : "Hey! I'm Nova. How can I help?",
-      known:true
+          : "Hey! I'm Nova. How can I help?"
     };
 
   }
 
 
-  /* NAME */
+  /*
+  NAME
+  */
 
   const name =
     question.match(
@@ -865,13 +1092,17 @@ function fakeAI(question){
     saveMemory();
 
     return {
+      known:true,
       answer:
-        `Nice to meet you, ${memory.name}! I'll remember your name.`,
-      known:true
+        `Nice to meet you, ${memory.name}! I'll remember your name.`
     };
 
   }
 
+
+  /*
+  REMEMBER NAME
+  */
 
   if(
     q.includes("what is my name") ||
@@ -879,29 +1110,32 @@ function fakeAI(question){
   ){
 
     return {
+      known:true,
       answer:
         memory.name
           ? `Your name is ${memory.name}.`
-          : "You haven't told me your name yet.",
-      known:true
+          : "You haven't told me your name yet."
     };
 
   }
 
 
-  /* MATH */
+  /*
+  MATH
+  */
 
-  const math =
+  const expression =
     q
       .replace(/what is/g,"")
       .replace(/calculate/g,"")
       .replace(/solve/g,"")
+      .replace(/equals/g,"")
       .replace(/=/g,"")
       .trim();
 
   if(
-    /^[0-9+\-*/().%\s]+$/.test(math) &&
-    /[0-9]/.test(math)
+    /^[0-9+\-*/().%\s]+$/.test(expression) &&
+    /[0-9]/.test(expression)
   ){
 
     try{
@@ -909,7 +1143,7 @@ function fakeAI(question){
       const result =
         Function(
           '"use strict";return (' +
-          math +
+          expression +
           ')'
         )();
 
@@ -918,9 +1152,9 @@ function fakeAI(question){
       ){
 
         return {
+          known:true,
           answer:
-            `The answer is ${result}.`,
-          known:true
+            `The answer is ${result}.`
         };
 
       }
@@ -930,28 +1164,31 @@ function fakeAI(question){
   }
 
 
-  /* TOPICS */
+  /*
+  KNOWLEDGE
+  */
 
   for(
-    const key in topics
+    const item of knowledge
   ){
 
-    const topic =
-      topics[key];
-
     if(
-      topic.keys.some(
-        k => q.includes(k)
+      item.keys.some(
+        key =>
+          q.includes(
+            key
+          )
       )
     ){
 
       let answer =
-        topic.answer;
+        item.answer;
 
       if(
         q.includes("simple") ||
         q.includes("simply") ||
-        q.includes("easy")
+        q.includes("easy") ||
+        q.includes("like i'm 10")
       ){
 
         answer =
@@ -961,8 +1198,8 @@ function fakeAI(question){
       }
 
       return {
-        answer,
-        known:true
+        known:true,
+        answer
       };
 
     }
@@ -970,7 +1207,9 @@ function fakeAI(question){
   }
 
 
-  /* HELP */
+  /*
+  HELP
+  */
 
   if(
     q === "help" ||
@@ -978,49 +1217,54 @@ function fakeAI(question){
   ){
 
     return {
+      known:true,
       answer:
 `I can help with:
 
-• Basic questions
 • Explanations
 • Definitions
+• Basic science
 • Math
-• JavaScript
 • HTML
 • CSS
+• JavaScript
 • Computers
-• Basic science
 • Remembering your name
+• Simple coding questions
 
-For questions I don't know, I can give you a web-search option.`,
-      known:true
+For things outside my built-in knowledge, you can use Real AI or search the web.`
     };
 
   }
 
 
-  /* UNKNOWN */
+  /*
+  UNKNOWN
+  */
 
   return {
+    known:false,
     answer:
-      "I can't answer that with my built-in Fake AI knowledge. You can use Real AI mode or search the web for it.",
-    known:false
+      "I can't answer that using my built-in Fake AI knowledge."
   };
 
 }
 
 
-/* =====================================================
-   LOAD REAL AI
-   ===================================================== */
+/*
+=========================================================
+LOAD REAL AI
+=========================================================
+*/
 
 async function loadRealAI(){
 
-  if(realAI || loadingAI){
+  if(realAI || realAILoading){
     return;
   }
 
-  loadingAI = true;
+  realAILoading =
+    true;
 
   loading.style.display =
     "flex";
@@ -1029,10 +1273,10 @@ async function loadRealAI(){
     "Loading Real AI..."
   );
 
-  const gpu =
-    !!navigator.gpu;
-
   try{
+
+    const useGPU =
+      !!navigator.gpu;
 
     realAI =
       await pipeline(
@@ -1040,7 +1284,7 @@ async function loadRealAI(){
         "HuggingFaceTB/SmolLM2-360M-Instruct",
         {
           device:
-            gpu
+            useGPU
               ? "webgpu"
               : "wasm",
 
@@ -1054,7 +1298,7 @@ async function loadRealAI(){
                 "number"
               ){
 
-                progressFill.style.width =
+                progressBar.style.width =
                   Math.round(
                     data.progress
                   ) + "%";
@@ -1078,17 +1322,17 @@ async function loadRealAI(){
       "none";
 
     setStatus(
-      gpu
+      useGPU
         ? "Real AI • WebGPU"
         : "Real AI • CPU"
     );
 
-    loadReal.textContent =
+    loadAIButton.textContent =
       "✓ Real AI Loaded";
 
     addMessage(
       "ai",
-      "Real AI is ready. You can now switch to Real AI mode.",
+      "Real AI is ready. Switch the mode to Real AI or use Auto.",
       "REAL AI"
     );
 
@@ -1100,25 +1344,28 @@ async function loadRealAI(){
       "none";
 
     setStatus(
-      "Real AI failed"
+      "Fake AI ready"
     );
 
     addMessage(
       "ai",
-      "I couldn't load the Real AI model. Fake AI mode is still available.",
+      "The Real AI model couldn't be loaded. Fake AI is still working normally.",
       "SYSTEM"
     );
 
   }
 
-  loadingAI = false;
+  realAILoading =
+    false;
 
 }
 
 
-/* =====================================================
-   REAL AI RESPONSE
-   ===================================================== */
+/*
+=========================================================
+REAL AI RESPONSE
+=========================================================
+*/
 
 async function realResponse(
   question
@@ -1138,12 +1385,15 @@ async function realResponse(
 
 
   let prompt =
-`You are Nova AI, a helpful assistant.
+`You are Nova AI.
 
-Answer the user's question clearly and naturally.
+Be helpful, friendly, and accurate.
+
+Explain things clearly when asked.
 
 Conversation:
 `;
+
 
   for(
     const item of conversation.slice(-8)
@@ -1153,6 +1403,7 @@ Conversation:
       `\n${item.role}: ${item.text}`;
 
   }
+
 
   prompt +=
     `\nuser: ${question}\nassistant:`;
@@ -1192,9 +1443,11 @@ Conversation:
 }
 
 
-/* =====================================================
-   MAIN RESPONSE
-   ===================================================== */
+/*
+=========================================================
+ASK NOVA
+=========================================================
+*/
 
 async function askNova(
   question
@@ -1204,7 +1457,9 @@ async function askNova(
     mode.value;
 
 
-  /* FAKE */
+  /*
+  FAKE
+  */
 
   if(
     selected === "fake"
@@ -1223,7 +1478,7 @@ async function askNova(
     if(!result.known){
 
       addSearchButton(
-        content,
+        content.parentElement,
         question
       );
 
@@ -1234,17 +1489,31 @@ async function askNova(
   }
 
 
-  /* REAL */
+  /*
+  REAL
+  */
 
   if(
     selected === "real"
   ){
 
-    const content =
-      addMessage(
-        "ai",
-        "Thinking...",
-        "REAL AI"
+    addMessage(
+      "ai",
+      "Thinking...",
+      "REAL AI"
+    );
+
+    const rows =
+      chatInner.querySelectorAll(
+        ".message"
+      );
+
+    const last =
+      rows[rows.length - 1];
+
+    const body =
+      last.querySelector(
+        ".messageText"
       );
 
     try{
@@ -1254,7 +1523,7 @@ async function askNova(
           question
         );
 
-      content.textContent =
+      body.textContent =
         answer;
 
       conversation.push({
@@ -1269,11 +1538,13 @@ async function askNova(
 
     }catch(error){
 
-      content.textContent =
-        "Real AI couldn't answer this. You can switch to Fake AI or search the web.";
+      body.textContent =
+        "Real AI couldn't answer this.";
 
       addSearchButton(
-        content,
+        last.querySelector(
+          ".messageBody"
+        ),
         question
       );
 
@@ -1284,7 +1555,9 @@ async function askNova(
   }
 
 
-  /* AUTO */
+  /*
+  AUTO
+  */
 
   const fake =
     fakeAI(question);
@@ -1303,18 +1576,25 @@ async function askNova(
   }
 
 
-  /*
-    Auto tries Real AI if it
-    has already been loaded.
-  */
-
   if(realAI){
 
-    const content =
-      addMessage(
-        "ai",
-        "Thinking...",
-        "REAL AI"
+    addMessage(
+      "ai",
+      "Thinking...",
+      "REAL AI"
+    );
+
+    const rows =
+      chatInner.querySelectorAll(
+        ".message"
+      );
+
+    const last =
+      rows[rows.length - 1];
+
+    const body =
+      last.querySelector(
+        ".messageText"
       );
 
     try{
@@ -1324,7 +1604,7 @@ async function askNova(
           question
         );
 
-      content.textContent =
+      body.textContent =
         answer;
 
       conversation.push({
@@ -1348,8 +1628,6 @@ async function askNova(
   }
 
 
-  /* FALLBACK */
-
   const content =
     addMessage(
       "ai",
@@ -1358,16 +1636,18 @@ async function askNova(
     );
 
   addSearchButton(
-    content,
+    content.parentElement,
     question
   );
 
 }
 
 
-/* =====================================================
-   SEND
-   ===================================================== */
+/*
+=========================================================
+SEND
+=========================================================
+*/
 
 async function sendMessage(){
 
@@ -1378,7 +1658,8 @@ async function sendMessage(){
     return;
   }
 
-  input.value = "";
+  input.value =
+    "";
 
   input.style.height =
     "46px";
@@ -1397,9 +1678,11 @@ async function sendMessage(){
 }
 
 
-/* =====================================================
-   EVENTS
-   ===================================================== */
+/*
+=========================================================
+EVENTS
+=========================================================
+*/
 
 send.onclick =
   sendMessage;
@@ -1407,14 +1690,14 @@ send.onclick =
 
 input.addEventListener(
   "keydown",
-  e => {
+  event => {
 
     if(
-      e.key === "Enter" &&
-      !e.shiftKey
+      event.key === "Enter" &&
+      !event.shiftKey
     ){
 
-      e.preventDefault();
+      event.preventDefault();
 
       sendMessage();
 
@@ -1434,14 +1717,14 @@ input.addEventListener(
     this.style.height =
       Math.min(
         this.scrollHeight,
-        160
+        150
       ) + "px";
 
   }
 );
 
 
-loadReal.onclick =
+loadAIButton.onclick =
   loadRealAI;
 
 
@@ -1485,21 +1768,29 @@ mode.addEventListener(
 );
 
 
-/* =====================================================
-   NEW CHAT
-   ===================================================== */
+/*
+=========================================================
+NEW CHAT
+=========================================================
+*/
 
-window.newChat =
-  function(){
+newChatButton.onclick =
+  () => {
 
     conversation = [];
 
-    messages.innerHTML = `
+    chatInner.innerHTML = `
       <div
         class="welcome"
         id="welcome">
 
-        <h1>Nova</h1>
+        <div class="welcomeLogo">
+          ✦
+        </div>
+
+        <h1>
+          How can I help?
+        </h1>
 
         <p>
           New conversation started.
@@ -1513,12 +1804,14 @@ window.newChat =
   };
 
 
-/* =====================================================
-   CLEAR MEMORY
-   ===================================================== */
+/*
+=========================================================
+CLEAR MEMORY
+=========================================================
+*/
 
-window.clearMemory =
-  function(){
+clearMemoryButton.onclick =
+  () => {
 
     memory = {};
 
@@ -1535,9 +1828,39 @@ window.clearMemory =
   };
 
 
-/* =====================================================
-   INITIAL
-   ===================================================== */
+/*
+=========================================================
+QUICK BUTTONS
+=========================================================
+*/
+
+document.addEventListener(
+  "click",
+  event => {
+
+    const button =
+      event.target.closest(
+        "[data-q]"
+      );
+
+    if(!button){
+      return;
+    }
+
+    input.value =
+      button.dataset.q;
+
+    sendMessage();
+
+  }
+);
+
+
+/*
+=========================================================
+INITIAL STATUS
+=========================================================
+*/
 
 setStatus(
   navigator.gpu
