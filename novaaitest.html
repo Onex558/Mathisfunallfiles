@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova AI</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+:root{
+  --bg:#08080b;
+  --panel:#111116;
+  --panel2:#18181e;
+  --border:#292930;
+  --text:#f5f5f7;
+  --muted:#92929d;
+  --accent:#735cff;
+}
+
+body{
+  margin:0;
+  height:100vh;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at top,#1d1735 0,#08080b 45%);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+.app{
+  height:100vh;
+  display:flex;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+  width:250px;
+  background:rgba(10,10,14,.96);
+  border-right:1px solid var(--border);
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:900;
+  margin-bottom:20px;
+}
+
+.newChat{
+  border:1px solid var(--border);
+  background:var(--panel);
+  color:white;
+  padding:13px;
+  border-radius:11px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.newChat:hover{
+  background:var(--panel2);
+}
+
+.info{
+  margin-top:auto;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.6;
+}
+
+/* MAIN */
+
+.main{
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+}
+
+.topbar{
+  height:60px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px;
+  background:rgba(10,10,14,.7);
+}
+
+.model{
+  font-weight:800;
+}
+
+.status{
+  color:#65dc8c;
+  font-size:12px;
+}
+
+/* CHAT */
+
+.chat{
+  flex:1;
+  overflow-y:auto;
+  padding:30px 15px 150px;
+}
+
+.messages{
+  width:min(850px,100%);
+  margin:auto;
+}
+
+.welcome{
+  text-align:center;
+  margin:12vh auto 40px;
+}
+
+.welcome h1{
+  font-size:clamp(38px,7vw,65px);
+  margin:0 0 12px;
+}
+
+.welcome p{
+  color:var(--muted);
+}
+
+.message{
+  display:flex;
+  gap:13px;
+  margin:25px 0;
+}
+
+.avatar{
+  width:35px;
+  height:35px;
+  min-width:35px;
+  border-radius:10px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:var(--panel2);
+}
+
+.user .avatar{
+  background:var(--accent);
+}
+
+.content{
+  flex:1;
+  line-height:1.65;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+
+.ai .content{
+  color:#dedee6;
+}
+
+/* INPUT */
+
+.inputArea{
+  position:fixed;
+  bottom:0;
+  left:250px;
+  right:0;
+  padding:18px;
+  background:linear-gradient(
+    transparent,
+    rgba(8,8,11,.97) 30%
+  );
+}
+
+.inputBox{
+  width:min(850px,100%);
+  margin:auto;
+  display:flex;
+  gap:9px;
+  padding:9px;
+  border:1px solid var(--border);
+  border-radius:17px;
+  background:var(--panel);
+}
+
+textarea{
+  flex:1;
+  resize:none;
+  max-height:150px;
+  min-height:45px;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:white;
+  font:inherit;
+  padding:12px;
+}
+
+textarea::placeholder{
+  color:#686871;
+}
+
+.send{
+  width:48px;
+  height:48px;
+  align-self:flex-end;
+  border:0;
+  border-radius:12px;
+  background:var(--accent);
+  color:white;
+  font-size:19px;
+  cursor:pointer;
+}
+
+.send:hover{
+  filter:brightness(1.15);
+}
+
+.typing{
+  color:#777!important;
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+  .sidebar{
+    display:none;
+  }
+
+  .inputArea{
+    left:0;
+  }
+
+  .topbar{
+    padding:0 14px;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <aside class="sidebar">
+
+    <div class="logo">
+      🤖 Nova AI
+    </div>
+
+    <button class="newChat" id="newChat">
+      + New Chat
+    </button>
+
+    <div class="info">
+      Local browser AI simulation.<br><br>
+      No API key<br>
+      No server<br>
+      No downloads<br>
+      No external services
+    </div>
+
+  </aside>
+
+  <main class="main">
+
+    <div class="topbar">
+      <div class="model">
+        Nova AI
+      </div>
+
+      <div class="status">
+        ● Online
+      </div>
+    </div>
+
+    <div class="chat" id="chat">
+
+      <div class="messages" id="messages">
+
+        <div class="welcome" id="welcome">
+
+          <h1>How can I help?</h1>
+
+          <p>
+            Ask me something and I'll do my best to answer.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="inputArea">
+
+      <div class="inputBox">
+
+        <textarea
+          id="input"
+          placeholder="Message Nova AI..."
+          rows="1"
+        ></textarea>
+
+        <button
+          class="send"
+          id="send"
+        >
+          ↑
+        </button>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+
+/*
+============================================================
+NOVA AI
+100% LOCAL FAKE AI
+============================================================
+*/
+
+const input =
+  document.getElementById("input");
+
+const send =
+  document.getElementById("send");
+
+const messages =
+  document.getElementById("messages");
+
+const chat =
+  document.getElementById("chat");
+
+const newChat =
+  document.getElementById("newChat");
+
+let conversation = [];
+
+/*
+============================================================
+MEMORY
+============================================================
+*/
+
+let memory =
+  JSON.parse(
+    localStorage.getItem("novaMemory") || "{}"
+  );
+
+function saveMemory(){
+
+  localStorage.setItem(
+    "novaMemory",
+    JSON.stringify(memory)
+  );
+
+}
+
+/*
+============================================================
+ADD MESSAGE
+============================================================
+*/
+
+function addMessage(
+  type,
+  text
+){
+
+  const welcome =
+    document.getElementById("welcome");
+
+  if(welcome){
+    welcome.remove();
+  }
+
+  const message =
+    document.createElement("div");
+
+  message.className =
+    "message " + type;
+
+  const avatar =
+    document.createElement("div");
+
+  avatar.className =
+    "avatar";
+
+  avatar.textContent =
+    type === "user"
+      ? "👤"
+      : "🤖";
+
+  const content =
+    document.createElement("div");
+
+  content.className =
+    "content";
+
+  content.textContent =
+    text;
+
+  message.appendChild(avatar);
+  message.appendChild(content);
+
+  messages.appendChild(message);
+
+  chat.scrollTop =
+    chat.scrollHeight;
+
+  return content;
+}
+
+/*
+============================================================
+RANDOM CHOICE
+============================================================
+*/
+
+function random(array){
+
+  return array[
+    Math.floor(
+      Math.random() * array.length
+    )
+  ];
+
+}
+
+/*
+============================================================
+CLEAN TEXT
+============================================================
+*/
+
+function clean(text){
+
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s]/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+
+}
+
+/*
+============================================================
+MATH
+============================================================
+*/
+
+function calculate(text){
+
+  const expression =
+    text
+      .replace(
+        /what is|calculate|equals|=/gi,
+        ""
+      )
+      .trim();
+
+  if(
+    /^[0-9+\-*/().%\s]+$/.test(
+      expression
+    )
+  ){
+
+    try{
+
+      const result =
+        Function(
+          '"use strict";return (' +
+          expression +
+          ')'
+        )();
+
+      if(
+        typeof result === "number" &&
+        Number.isFinite(result)
+      ){
+
+        return String(result);
+
+      }
+
+    }catch(e){}
+
+  }
+
+  return null;
+
+}
+
+/*
+============================================================
+AI RESPONSE ENGINE
+============================================================
+*/
+
+function generateResponse(
+  original
+){
+
+  const text =
+    clean(original);
+
+  /*
+  NAME MEMORY
+  */
+
+  const nameMatch =
+    original.match(
+      /(?:my name is|call me)\s+([a-zA-Z0-9_-]+)/i
+    );
+
+  if(nameMatch){
+
+    memory.name =
+      nameMatch[1];
+
+    saveMemory();
+
+    return `Nice to meet you, ${memory.name}! I'll remember your name.`;
+
+  }
+
+  /*
+  MATH
+  */
+
+  const math =
+    calculate(original);
+
+  if(math !== null){
+
+    return `The answer is ${math}.`;
+
+  }
+
+  /*
+  GREETINGS
+  */
+
+  if(
+    /\b(hi|hello|hey|yo|sup|howdy)\b/.test(text)
+  ){
+
+    if(memory.name){
+
+      return random([
+        `Hey ${memory.name}! What's up?`,
+        `Hello ${memory.name}! How can I help?`,
+        `Hey! Good to see you again, ${memory.name}.`
+      ]);
+
+    }
+
+    return random([
+      "Hey! How can I help?",
+      "Hello! What can I do for you?",
+      "Hey there! Ask me anything.",
+      "Hi! What's on your mind?"
+    ]);
+
+  }
+
+  /*
+  HOW ARE YOU
+  */
+
+  if(
+    text.includes("how are you") ||
+    text.includes("how r u")
+  ){
+
+    return random([
+      "I'm doing great! Thanks for asking.",
+      "I'm good and ready to help.",
+      "Running perfectly. What are we working on?",
+      "I'm doing well!"
+    ]);
+
+  }
+
+  /*
+  WHO ARE YOU
+  */
+
+  if(
+    text.includes("who are you") ||
+    text.includes("what are you")
+  ){
+
+    return "I'm Nova AI, a browser-based AI simulation made entirely with JavaScript. I don't use an API or an external AI model.";
+
+  }
+
+  /*
+  CREATOR
+  */
+
+  if(
+    text.includes("who made you") ||
+    text.includes("who created you")
+  ){
+
+    return "I'm a custom AI simulation running inside this webpage.";
+
+  }
+
+  /*
+  TIME
+  */
+
+  if(
+    text.includes("what time") ||
+    text === "time"
+  ){
+
+    return "Your current browser time is " +
+      new Date().toLocaleTimeString() +
+      ".";
+
+  }
+
+  /*
+  DATE
+  */
+
+  if(
+    text.includes("what date") ||
+    text.includes("what day is it") ||
+    text === "date"
+  ){
+
+    return "Today is " +
+      new Date().toLocaleDateString() +
+      ".";
+
+  }
+
+  /*
+  THANKS
+  */
+
+  if(
+    /\b(thanks|thank you|thx)\b/.test(text)
+  ){
+
+    return random([
+      "You're welcome!",
+      "No problem!",
+      "Anytime!",
+      "Glad I could help!"
+    ]);
+
+  }
+
+  /*
+  GOODBYE
+  */
+
+  if(
+    /\b(bye|goodbye|see you)\b/.test(text)
+  ){
+
+    return random([
+      "See you later!",
+      "Bye!",
+      "Catch you later!",
+      "See you next time!"
+    ]);
+
+  }
+
+  /*
+  GAMES
+  */
+
+  if(
+    text.includes("game") ||
+    text.includes("gaming")
+  ){
+
+    return random([
+      "Games are definitely one of my favorite things to talk about. What game are you working with?",
+      "What kind of game are you thinking about?",
+      "I can help brainstorm game ideas, mechanics, menus, or JavaScript code."
+    ]);
+
+  }
+
+  /*
+  JAVASCRIPT
+  */
+
+  if(
+    text.includes("javascript") ||
+    text.includes("html") ||
+    text.includes("css") ||
+    text.includes("coding") ||
+    text.includes("code")
+  ){
+
+    return random([
+      "I can help with HTML, CSS, and JavaScript. Tell me what you're trying to build.",
+      "For a browser project, JavaScript is a great place to start. What are you trying to make?",
+      "Sure! Send me the code or describe the feature you want."
+    ]);
+
+  }
+
+  /*
+  AI
+  */
+
+  if(
+    text.includes("artificial intelligence") ||
+    text.includes(" ai ") ||
+    text === "ai"
+  ){
+
+    return "AI is software designed to perform tasks that normally require some form of human-like reasoning, such as understanding language, recognizing patterns, or generating content.";
+
+  }
+
+  /*
+  WEATHER
+  */
+
+  if(
+    text.includes("weather")
+  ){
+
+    return "I can't access live weather data because this AI runs entirely inside your browser. If you give me weather information, though, I can help interpret it.";
+
+  }
+
+  /*
+  INTERNET
+  */
+
+  if(
+    text.includes("internet") ||
+    text.includes("website")
+  ){
+
+    return "The internet is a huge network of connected computers and devices that communicate using standardized protocols.";
+
+  }
+
+  /*
+  HELP
+  */
+
+  if(
+    text === "help" ||
+    text.includes("what can you do")
+  ){
+
+    return "I can chat with you, remember your name during future messages, answer simple questions, do basic math, tell you the date and time, and respond to topics I have built-in knowledge for.";
+
+  }
+
+  /*
+  MEMORY
+  */
+
+  if(
+    text.includes("remember my name") ||
+    text.includes("what is my name")
+  ){
+
+    if(memory.name){
+
+      return `Your name is ${memory.name}.`;
+
+    }
+
+    return "You haven't told me your name yet.";
+
+  }
+
+  /*
+  OPINION
+  */
+
+  if(
+    text.includes("favorite")
+  ){
+
+    return random([
+      "I don't have personal preferences, but I can definitely discuss different options.",
+      "I don't have real personal preferences, although I can help compare them.",
+      "That's a good question. I don't experience preferences like a person does."
+    ]);
+
+  }
+
+  /*
+  WHY QUESTIONS
+  */
+
+  if(
+    text.startsWith("why ")
+  ){
+
+    return "That's an interesting question. The answer depends on the specific situation. Give me a little more context and I can try to break it down.";
+
+  }
+
+  /*
+  QUESTION FALLBACKS
+  */
+
+  if(
+    text.endsWith("?")
+  ){
+
+    return random([
+      "That's an interesting question. Can you give me a little more context?",
+      "I can try to help with that. What specifically are you trying to figure out?",
+      "I'm not completely sure from that question alone. Tell me a little more.",
+      "Good question. Let's break it down."
+    ]);
+
+  }
+
+  /*
+  GENERAL FALLBACK
+  */
+
+  return random([
+    "Interesting. Tell me more about that.",
+    "I understand. What would you like to do with it?",
+    "That sounds interesting. Can you explain what you mean?",
+    "Got it. What should we work on next?",
+    "Okay! I'm listening.",
+    "I see. What are you trying to accomplish?"
+  ]);
+
+}
+
+/*
+============================================================
+SEND
+============================================================
+*/
+
+function sendMessage(){
+
+  const text =
+    input.value.trim();
+
+  if(!text){
+    return;
+  }
+
+  input.value = "";
+  input.style.height = "45px";
+
+  addMessage(
+    "user",
+    text
+  );
+
+  conversation.push({
+    role:"user",
+    text:text
+  });
+
+  const typing =
+    addMessage(
+      "ai",
+      "Thinking..."
+    );
+
+  typing.classList.add(
+    "typing"
+  );
+
+  /*
+  Small delay makes it feel
+  more like an AI thinking.
+  */
+
+  const delay =
+    350 +
+    Math.random() * 700;
+
+  setTimeout(() => {
+
+    const response =
+      generateResponse(text);
+
+    typing.classList.remove(
+      "typing"
+    );
+
+    typing.textContent =
+      response;
+
+    conversation.push({
+      role:"ai",
+      text:response
+    });
+
+    chat.scrollTop =
+      chat.scrollHeight;
+
+  },delay);
+
+}
+
+/*
+============================================================
+NEW CHAT
+============================================================
+*/
+
+function resetChat(){
+
+  conversation = [];
+
+  messages.innerHTML = `
+    <div class="welcome" id="welcome">
+
+      <h1>How can I help?</h1>
+
+      <p>
+        Ask me something and I'll do my best to answer.
+      </p>
+
+    </div>
+  `;
+
+  input.value = "";
+
+  input.focus();
+
+}
+
+/*
+============================================================
+EVENTS
+============================================================
+*/
+
+send.addEventListener(
+  "click",
+  sendMessage
+);
+
+newChat.addEventListener(
+  "click",
+  resetChat
+);
+
+input.addEventListener(
+  "keydown",
+  function(event){
+
+    if(
+      event.key === "Enter" &&
+      !event.shiftKey
+    ){
+
+      event.preventDefault();
+
+      sendMessage();
+
+    }
+
+  }
+);
+
+input.addEventListener(
+  "input",
+  function(){
+
+    this.style.height =
+      "auto";
+
+    this.style.height =
+      Math.min(
+        this.scrollHeight,
+        150
+      ) + "px";
+
+  }
+);
+
+</script>
+
+</body>
+</html>
