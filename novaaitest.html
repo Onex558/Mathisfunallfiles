@@ -2,22 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Nova AI</title>
 
 <style>
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 :root{
-  --bg:#08080b;
-  --panel:#111116;
-  --panel2:#18181e;
-  --border:#292930;
+  --bg:#07070a;
+  --panel:#101015;
+  --panel2:#17171e;
+  --border:#292932;
   --text:#f5f5f7;
-  --muted:#92929d;
+  --muted:#92929e;
   --accent:#735cff;
+  --accent2:#927fff;
 }
 
 body{
@@ -25,7 +24,7 @@ body{
   height:100vh;
   overflow:hidden;
   background:
-    radial-gradient(circle at top,#1d1735 0,#08080b 45%);
+    radial-gradient(circle at 50% -20%,#251b49 0,#0b0b10 45%,#07070a 100%);
   color:var(--text);
   font-family:Arial,Helvetica,sans-serif;
 }
@@ -35,11 +34,9 @@ body{
   display:flex;
 }
 
-/* SIDEBAR */
-
 .sidebar{
-  width:250px;
-  background:rgba(10,10,14,.96);
+  width:255px;
+  background:rgba(9,9,13,.96);
   border-right:1px solid var(--border);
   padding:18px;
   display:flex;
@@ -47,33 +44,35 @@ body{
 }
 
 .logo{
-  font-size:22px;
+  font-size:23px;
   font-weight:900;
   margin-bottom:20px;
 }
 
-.newChat{
+.newChat,
+.clearMemory{
+  width:100%;
+  padding:13px;
+  border-radius:11px;
   border:1px solid var(--border);
   background:var(--panel);
   color:white;
-  padding:13px;
-  border-radius:11px;
   cursor:pointer;
-  font-weight:bold;
+  font-weight:800;
+  margin-bottom:9px;
 }
 
-.newChat:hover{
+.newChat:hover,
+.clearMemory:hover{
   background:var(--panel2);
 }
 
-.info{
+.sidebarInfo{
   margin-top:auto;
   color:var(--muted);
   font-size:12px;
-  line-height:1.6;
+  line-height:1.65;
 }
-
-/* MAIN */
 
 .main{
   flex:1;
@@ -89,19 +88,17 @@ body{
   align-items:center;
   justify-content:space-between;
   padding:0 20px;
-  background:rgba(10,10,14,.7);
+  background:rgba(8,8,12,.72);
 }
 
 .model{
-  font-weight:800;
+  font-weight:900;
 }
 
 .status{
-  color:#65dc8c;
   font-size:12px;
+  color:#65dc8c;
 }
-
-/* CHAT */
 
 .chat{
   flex:1;
@@ -110,22 +107,46 @@ body{
 }
 
 .messages{
-  width:min(850px,100%);
+  width:min(900px,100%);
   margin:auto;
 }
 
 .welcome{
   text-align:center;
-  margin:12vh auto 40px;
+  margin:11vh auto 40px;
+  max-width:700px;
 }
 
 .welcome h1{
-  font-size:clamp(38px,7vw,65px);
   margin:0 0 12px;
+  font-size:clamp(38px,7vw,67px);
+  letter-spacing:-3px;
 }
 
 .welcome p{
   color:var(--muted);
+  line-height:1.6;
+}
+
+.suggestions{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px;
+  margin-top:25px;
+}
+
+.suggestion{
+  padding:10px 14px;
+  border:1px solid var(--border);
+  background:var(--panel);
+  color:#ddd;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+.suggestion:hover{
+  background:var(--panel2);
 }
 
 .message{
@@ -135,14 +156,14 @@ body{
 }
 
 .avatar{
-  width:35px;
-  height:35px;
-  min-width:35px;
+  width:36px;
+  height:36px;
+  min-width:36px;
   border-radius:10px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
   background:var(--panel2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .user .avatar{
@@ -151,45 +172,49 @@ body{
 
 .content{
   flex:1;
-  line-height:1.65;
+  min-width:0;
+  line-height:1.7;
   white-space:pre-wrap;
   overflow-wrap:anywhere;
 }
 
 .ai .content{
-  color:#dedee6;
+  color:#dedee7;
 }
 
-/* INPUT */
+.typing{
+  color:#777!important;
+}
 
 .inputArea{
   position:fixed;
-  bottom:0;
-  left:250px;
+  left:255px;
   right:0;
+  bottom:0;
   padding:18px;
   background:linear-gradient(
     transparent,
-    rgba(8,8,11,.97) 30%
+    rgba(7,7,10,.98) 32%
   );
 }
 
 .inputBox{
-  width:min(850px,100%);
+  width:min(900px,100%);
   margin:auto;
+  padding:9px;
   display:flex;
   gap:9px;
-  padding:9px;
-  border:1px solid var(--border);
-  border-radius:17px;
   background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:0 10px 45px rgba(0,0,0,.35);
 }
 
 textarea{
   flex:1;
+  min-height:46px;
+  max-height:160px;
   resize:none;
-  max-height:150px;
-  min-height:45px;
   border:0;
   outline:0;
   background:transparent;
@@ -199,7 +224,7 @@ textarea{
 }
 
 textarea::placeholder{
-  color:#686871;
+  color:#666671;
 }
 
 .send{
@@ -215,14 +240,8 @@ textarea::placeholder{
 }
 
 .send:hover{
-  filter:brightness(1.15);
+  background:var(--accent2);
 }
-
-.typing{
-  color:#777!important;
-}
-
-/* MOBILE */
 
 @media(max-width:700px){
 
@@ -238,6 +257,11 @@ textarea::placeholder{
     padding:0 14px;
   }
 
+  .chat{
+    padding-left:10px;
+    padding-right:10px;
+  }
+
 }
 </style>
 </head>
@@ -246,117 +270,150 @@ textarea::placeholder{
 
 <div class="app">
 
-  <aside class="sidebar">
+<aside class="sidebar">
 
-    <div class="logo">
-      🤖 Nova AI
-    </div>
+  <div class="logo">🤖 Nova AI</div>
 
-    <button class="newChat" id="newChat">
-      + New Chat
-    </button>
+  <button class="newChat" id="newChat">
+    ＋ New Chat
+  </button>
 
-    <div class="info">
-      Local browser AI simulation.<br><br>
-      No API key<br>
-      No server<br>
-      No downloads<br>
-      No external services
-    </div>
+  <button class="clearMemory" id="clearMemory">
+    🧠 Clear Memory
+  </button>
 
-  </aside>
+  <div class="sidebarInfo">
+    Nova AI<br><br>
 
-  <main class="main">
+    Browser-based AI simulation.<br><br>
 
-    <div class="topbar">
-      <div class="model">
-        Nova AI
-      </div>
+    ✓ No API<br>
+    ✓ No API key<br>
+    ✓ No external services<br>
+    ✓ No model download<br>
+    ✓ Works on GitHub Pages<br>
+    ✓ Everything is inside this file
+  </div>
 
-      <div class="status">
-        ● Online
-      </div>
-    </div>
+</aside>
 
-    <div class="chat" id="chat">
+<main class="main">
 
-      <div class="messages" id="messages">
+<div class="topbar">
 
-        <div class="welcome" id="welcome">
+  <div class="model">
+    Nova AI
+  </div>
 
-          <h1>How can I help?</h1>
+  <div class="status">
+    ● Online
+  </div>
 
-          <p>
-            Ask me something and I'll do my best to answer.
-          </p>
+</div>
 
-        </div>
+<div class="chat" id="chat">
 
-      </div>
+<div class="messages" id="messages">
 
-    </div>
+<div class="welcome" id="welcome">
 
-    <div class="inputArea">
+<h1>How can I help?</h1>
 
-      <div class="inputBox">
+<p>
+Ask me questions, ask me to explain things,
+do math, learn concepts, compare things,
+or just have a conversation.
+</p>
 
-        <textarea
-          id="input"
-          placeholder="Message Nova AI..."
-          rows="1"
-        ></textarea>
+<div class="suggestions">
 
-        <button
-          class="send"
-          id="send"
-        >
-          ↑
-        </button>
+<button class="suggestion"
+data-question="Explain gravity simply">
+Explain gravity
+</button>
 
-      </div>
+<button class="suggestion"
+data-question="What is artificial intelligence?">
+What is AI?
+</button>
 
-    </div>
+<button class="suggestion"
+data-question="Explain how computers work">
+How computers work
+</button>
 
-  </main>
+<button class="suggestion"
+data-question="What is JavaScript?">
+JavaScript
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="inputArea">
+
+<div class="inputBox">
+
+<textarea
+id="input"
+rows="1"
+placeholder="Message Nova AI..."
+></textarea>
+
+<button
+class="send"
+id="send">
+↑
+</button>
+
+</div>
+
+</div>
+
+</main>
 
 </div>
 
 <script>
 
-/*
-============================================================
-NOVA AI
-100% LOCAL FAKE AI
-============================================================
-*/
+/* =========================================================
+   NOVA AI
+   LARGE LOCAL RESPONSE ENGINE
+   ========================================================= */
 
 const input =
-  document.getElementById("input");
+document.getElementById("input");
 
 const send =
-  document.getElementById("send");
+document.getElementById("send");
 
 const messages =
-  document.getElementById("messages");
+document.getElementById("messages");
 
 const chat =
-  document.getElementById("chat");
+document.getElementById("chat");
 
 const newChat =
-  document.getElementById("newChat");
+document.getElementById("newChat");
+
+const clearMemory =
+document.getElementById("clearMemory");
 
 let conversation = [];
 
-/*
-============================================================
-MEMORY
-============================================================
-*/
-
 let memory =
-  JSON.parse(
-    localStorage.getItem("novaMemory") || "{}"
-  );
+JSON.parse(
+localStorage.getItem("novaMemory") || "{}"
+);
+
+/* =========================================================
+   UTILITIES
+   ========================================================= */
 
 function saveMemory(){
 
@@ -367,49 +424,58 @@ function saveMemory(){
 
 }
 
-/*
-============================================================
-ADD MESSAGE
-============================================================
-*/
+function random(array){
 
-function addMessage(
-  type,
-  text
-){
+  return array[
+    Math.floor(
+      Math.random()*array.length
+    )
+  ];
+
+}
+
+function clean(text){
+
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s?.!+\-*/%()]/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+
+}
+
+function addMessage(type,text){
 
   const welcome =
-    document.getElementById("welcome");
+  document.getElementById("welcome");
 
   if(welcome){
     welcome.remove();
   }
 
   const message =
-    document.createElement("div");
+  document.createElement("div");
 
   message.className =
-    "message " + type;
+  "message "+type;
 
   const avatar =
-    document.createElement("div");
+  document.createElement("div");
 
   avatar.className =
-    "avatar";
+  "avatar";
 
   avatar.textContent =
-    type === "user"
-      ? "👤"
-      : "🤖";
+  type==="user" ? "👤" : "🤖";
 
   const content =
-    document.createElement("div");
+  document.createElement("div");
 
   content.className =
-    "content";
+  "content";
 
   content.textContent =
-    text;
+  text;
 
   message.appendChild(avatar);
   message.appendChild(content);
@@ -417,117 +483,583 @@ function addMessage(
   messages.appendChild(message);
 
   chat.scrollTop =
-    chat.scrollHeight;
+  chat.scrollHeight;
 
   return content;
-}
-
-/*
-============================================================
-RANDOM CHOICE
-============================================================
-*/
-
-function random(array){
-
-  return array[
-    Math.floor(
-      Math.random() * array.length
-    )
-  ];
 
 }
 
-/*
-============================================================
-CLEAN TEXT
-============================================================
-*/
+/* =========================================================
+   MATH ENGINE
+   ========================================================= */
 
-function clean(text){
+function solveMath(text){
 
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s]/g," ")
-    .replace(/\s+/g," ")
+  let expression =
+  text
+    .replace(/what is/gi,"")
+    .replace(/calculate/gi,"")
+    .replace(/solve/gi,"")
+    .replace(/equals/gi,"")
+    .replace(/=/g,"")
     .trim();
 
-}
-
-/*
-============================================================
-MATH
-============================================================
-*/
-
-function calculate(text){
-
-  const expression =
-    text
-      .replace(
-        /what is|calculate|equals|=/gi,
-        ""
-      )
-      .trim();
-
   if(
-    /^[0-9+\-*/().%\s]+$/.test(
-      expression
-    )
+    !/^[0-9+\-*/().%\s]+$/.test(expression)
   ){
-
-    try{
-
-      const result =
-        Function(
-          '"use strict";return (' +
-          expression +
-          ')'
-        )();
-
-      if(
-        typeof result === "number" &&
-        Number.isFinite(result)
-      ){
-
-        return String(result);
-
-      }
-
-    }catch(e){}
-
+    return null;
   }
+
+  try{
+
+    const result =
+    Function(
+      '"use strict";return ('+
+      expression+
+      ')'
+    )();
+
+    if(
+      typeof result==="number" &&
+      Number.isFinite(result)
+    ){
+
+      return result;
+
+    }
+
+  }catch(e){}
 
   return null;
 
 }
 
-/*
-============================================================
-AI RESPONSE ENGINE
-============================================================
-*/
+/* =========================================================
+   KNOWLEDGE BASE
+   ========================================================= */
 
-function generateResponse(
-  original
-){
+const knowledge = {
 
-  const text =
-    clean(original);
+gravity:{
+keywords:[
+"gravity",
+"gravitational force"
+],
+answer:
+"Gravity is a force that attracts objects with mass toward one another. On Earth, gravity pulls objects toward the planet's center. It is also what keeps the Moon in orbit around Earth and Earth in orbit around the Sun.",
+simple:
+"Gravity is basically the force that pulls things toward other things. Earth's gravity is why you fall when you jump."
+},
 
-  /*
-  NAME MEMORY
-  */
+photosynthesis:{
+keywords:[
+"photosynthesis"
+],
+answer:
+"Photosynthesis is the process plants use to convert light energy into chemical energy. Plants generally use light, water, and carbon dioxide to produce sugars while releasing oxygen.",
+simple:
+"Plants use sunlight, water, and carbon dioxide to make food for themselves. Oxygen is released as part of the process."
+},
 
-  const nameMatch =
-    original.match(
-      /(?:my name is|call me)\s+([a-zA-Z0-9_-]+)/i
+atoms:{
+keywords:[
+"atom",
+"atoms"
+],
+answer:
+"An atom is a basic unit of ordinary matter. It contains a nucleus made primarily of protons and neutrons, surrounded by electrons.",
+simple:
+"An atom is a tiny building block that makes up matter. Everything around you is made from atoms."
+},
+
+electricity:{
+keywords:[
+"electricity",
+"electric current"
+],
+answer:
+"Electricity involves electric charge and its movement. In an ordinary electrical circuit, a voltage difference provides the energy that drives electric current through conductive materials.",
+simple:
+"Electricity is related to electric charges and how they move. A battery can provide the push that makes current flow through a circuit."
+},
+
+computer:{
+keywords:[
+"computer",
+"computers",
+"how computers work"
+],
+answer:
+"A computer receives input, processes information using electronic circuits and software, stores data, and produces output. Modern computers use processors to execute instructions and memory and storage systems to hold data.",
+simple:
+"Think of a computer like a very fast machine that follows instructions. You give it information, its processor works on it, and it gives you a result."
+},
+
+internet:{
+keywords:[
+"internet",
+"how the internet works"
+],
+answer:
+"The Internet is a global network of interconnected networks. Devices communicate using standardized protocols such as IP and TCP, while applications such as the web use additional protocols including HTTP and HTTPS.",
+simple:
+"The Internet is a huge network connecting computers and other devices so they can communicate and exchange information."
+},
+
+ai:{
+keywords:[
+"artificial intelligence",
+"artificial intelligence ai",
+"what is ai",
+" ai "
+],
+answer:
+"Artificial intelligence is a broad field of computing focused on creating systems that can perform tasks associated with capabilities such as pattern recognition, language processing, planning, prediction, and decision-making.",
+simple:
+"AI is software designed to perform tasks that can seem intelligent, such as understanding language, recognizing patterns, or making predictions."
+},
+
+javascript:{
+keywords:[
+"javascript",
+"js"
+],
+answer:
+"JavaScript is a programming language widely used to make websites interactive. It can modify webpage content, respond to user actions, communicate with servers, process data, and power applications outside the browser as well.",
+simple:
+"JavaScript is a programming language that can make websites do things instead of just displaying information."
+},
+
+html:{
+keywords:[
+"html",
+"hypertext markup language"
+],
+answer:
+"HTML stands for HyperText Markup Language. It provides the structure and meaning of content on webpages using elements such as headings, paragraphs, links, images, forms, and sections.",
+simple:
+"HTML is the structure of a webpage. You can think of it as the skeleton of a website."
+},
+
+css:{
+keywords:[
+"css",
+"cascading style sheets"
+],
+answer:
+"CSS stands for Cascading Style Sheets. It controls the presentation of HTML documents, including layout, spacing, typography, colors, animations, and responsive design.",
+simple:
+"CSS controls what a webpage looks like. HTML gives the page structure, while CSS makes it look good."
+},
+
+ram:{
+keywords:[
+"ram",
+"random access memory"
+],
+answer:
+"RAM is temporary working memory used by a computer to hold data and programs that are actively being used. Unlike persistent storage, RAM normally loses its contents when power is removed.",
+simple:
+"RAM is the computer's short-term workspace. More RAM can let a computer keep more active information readily available."
+},
+
+storage:{
+keywords:[
+"storage",
+"ssd",
+"hard drive",
+"hdd"
+],
+answer:
+"Storage is persistent memory used to keep files, applications, and operating system data. SSDs store data using flash memory, while traditional hard drives use magnetic disks.",
+simple:
+"Storage is where your files stay even after the computer is turned off."
+},
+
+cpu:{
+keywords:[
+"cpu",
+"processor"
+],
+answer:
+"The CPU, or central processing unit, executes instructions from computer programs. It performs operations and coordinates many of the tasks required to run software.",
+simple:
+"The CPU is one of the main parts of a computer responsible for carrying out instructions."
+},
+
+gpu:{
+keywords:[
+"gpu",
+"graphics card"
+],
+answer:
+"A GPU, or graphics processing unit, is a processor designed for highly parallel workloads. GPUs are especially useful for graphics, simulations, and many machine-learning calculations.",
+simple:
+"A GPU is a processor that is especially good at doing lots of similar calculations at the same time, which makes it useful for graphics and some AI workloads."
+},
+
+programming:{
+keywords:[
+"programming",
+"coding",
+"program code"
+],
+answer:
+"Programming is the process of creating instructions that computers can execute. Programmers use languages such as JavaScript, Python, C++, Java, and many others to express those instructions.",
+simple:
+"Programming means writing instructions that tell a computer what to do."
+},
+
+browser:{
+keywords:[
+"browser",
+"web browser"
+],
+answer:
+"A web browser is software that retrieves and displays web content. Browsers interpret technologies such as HTML, CSS, and JavaScript and communicate with web servers over network protocols.",
+simple:
+"A browser is the app you use to visit websites, such as Chrome, Safari, Firefox, or Edge."
+},
+
+operating:{
+keywords:[
+"operating system",
+"os"
+],
+answer:
+"An operating system is core system software that manages hardware and provides services for applications. Examples include Windows, macOS, Linux, Android, and iOS.",
+simple:
+"An operating system is the main software that manages a device and lets other programs run."
+},
+
+moon:{
+keywords:[
+"moon",
+"earth moon"
+],
+answer:
+"The Moon is Earth's natural satellite. Its gravity affects ocean tides, and its orbit around Earth produces the changing positions we observe in the night sky.",
+simple:
+"The Moon is Earth's natural space companion. It orbits Earth and reflects sunlight."
+},
+
+sun:{
+keywords:[
+"sun",
+"the sun"
+],
+answer:
+"The Sun is a star at the center of our solar system. It produces energy through nuclear fusion in its core and provides most of the energy driving Earth's climate and ecosystems.",
+simple:
+"The Sun is a star. It gives Earth light and heat."
+},
+
+solar:{
+keywords:[
+"solar system",
+"planets"
+],
+answer:
+"Our solar system contains the Sun and the objects gravitationally bound to it, including eight recognized planets, dwarf planets, moons, asteroids, comets, and other smaller bodies.",
+simple:
+"The solar system is our Sun and everything that orbits it, including the planets."
+},
+
+dna:{
+keywords:[
+"dna",
+"genetics"
+],
+answer:
+"DNA is a molecule that stores biological information. Its sequence contains instructions used by cells to build proteins and regulate many biological processes.",
+simple:
+"DNA is like a biological instruction system that stores information used by living cells."
+},
+
+evolution:{
+keywords:[
+"evolution",
+"natural selection"
+],
+answer:
+"Biological evolution is the change in inherited characteristics of populations across generations. Natural selection is one important mechanism through which traits associated with reproductive success can become more common.",
+simple:
+"Evolution means populations of living things change over many generations. Natural selection is one process that can cause those changes."
+},
+
+water:{
+keywords:[
+"water",
+"h2o"
+],
+answer:
+"Water is a chemical compound made of hydrogen and oxygen, commonly represented as H₂O. It is essential to known life and has unusual physical properties that are important to Earth's environment.",
+simple:
+"Water is H₂O: two hydrogen atoms and one oxygen atom."
+},
+
+history:{
+keywords:[
+"history",
+"historical"
+],
+answer:
+"History is the study of past events and human societies using evidence such as documents, artifacts, oral traditions, archaeological remains, and other sources.",
+simple:
+"History is the study of what happened in the past and how those events affected people and societies."
+},
+
+geography:{
+keywords:[
+"geography",
+"geographic"
+],
+answer:
+"Geography studies Earth's places, environments, physical features, and human activity, including how people and environments interact.",
+simple:
+"Geography is the study of places, Earth, environments, and where things are located."
+},
+
+economics:{
+keywords:[
+"economics",
+"economy"
+],
+answer:
+"Economics studies how people and societies use limited resources to produce, distribute, and consume goods and services.",
+simple:
+"Economics is about how people and societies make choices when resources are limited."
+}
+
+};
+
+/* =========================================================
+   FIND KNOWLEDGE
+   ========================================================= */
+
+function findKnowledge(text){
+
+  let best = null;
+  let score = 0;
+
+  for(
+    const key in knowledge
+  ){
+
+    const item =
+    knowledge[key];
+
+    let current = 0;
+
+    for(
+      const keyword of item.keywords
+    ){
+
+      if(
+        text.includes(
+          keyword.toLowerCase()
+        )
+      ){
+
+        current +=
+        keyword.length > 5
+        ? 3
+        : 1;
+
+      }
+
+    }
+
+    if(current > score){
+
+      score = current;
+      best = item;
+
+    }
+
+  }
+
+  return best;
+
+}
+
+/* =========================================================
+   EXPLANATION MODE
+   ========================================================= */
+
+function wantsSimple(text){
+
+  return (
+    text.includes("simply") ||
+    text.includes("simple") ||
+    text.includes("easy") ||
+    text.includes("like i m 10") ||
+    text.includes("like im 10") ||
+    text.includes("for kids") ||
+    text.includes("beginner")
+  );
+
+}
+
+function wantsExplanation(text){
+
+  return (
+    text.includes("explain") ||
+    text.includes("how does") ||
+    text.includes("how do") ||
+    text.includes("why does") ||
+    text.includes("why do") ||
+    text.includes("what is") ||
+    text.includes("what are") ||
+    text.includes("tell me about")
+  );
+
+}
+
+/* =========================================================
+   COMPARISON ENGINE
+   ========================================================= */
+
+function compareThings(text){
+
+  const match =
+  text.match(
+    /(?:difference between|compare)\s+(.+?)\s+(?:and|vs|versus)\s+(.+)/i
+  );
+
+  if(!match){
+    return null;
+  }
+
+  const a =
+  match[1].trim();
+
+  const b =
+  match[2].trim();
+
+  const pairs = [
+
+    [
+      "ram",
+      "storage",
+      "RAM is temporary working memory, while storage keeps data persistently."
+    ],
+
+    [
+      "cpu",
+      "gpu",
+      "A CPU is designed for general-purpose instruction processing, while a GPU is specialized for highly parallel workloads."
+    ],
+
+    [
+      "html",
+      "css",
+      "HTML provides webpage structure, while CSS controls presentation and styling."
+    ],
+
+    [
+      "javascript",
+      "python",
+      "JavaScript is widely used for web development and can also run outside browsers. Python is a general-purpose language commonly used for scripting, automation, data science, and many other tasks."
+    ],
+
+    [
+      "hdd",
+      "ssd",
+      "An HDD uses spinning magnetic disks, while an SSD uses flash memory. SSDs are generally faster and have no moving drive mechanism."
+    ]
+
+  ];
+
+  for(
+    const pair of pairs
+  ){
+
+    const first =
+    pair[0];
+
+    const second =
+    pair[1];
+
+    if(
+      (
+        a.toLowerCase().includes(first) &&
+        b.toLowerCase().includes(second)
+      ) ||
+      (
+        a.toLowerCase().includes(second) &&
+        b.toLowerCase().includes(first)
+      )
+    ){
+
+      return pair[2];
+
+    }
+
+  }
+
+  return `A useful way to compare ${a} and ${b} is to look at their purpose, how they work, their advantages, and their limitations.`;
+
+}
+
+/* =========================================================
+   SUMMARIZER
+   ========================================================= */
+
+function summarize(text){
+
+  const sentences =
+  text.match(
+    /[^.!?]+[.!?]+/g
+  );
+
+  if(
+    !sentences ||
+    sentences.length < 2
+  ){
+
+    return "Give me a longer piece of text and I can identify its main ideas.";
+
+  }
+
+  const important =
+  sentences
+    .slice(0,Math.min(3,sentences.length))
+    .map(
+      s=>s.trim()
     );
 
-  if(nameMatch){
+  return (
+    "Summary:\n\n" +
+    important
+      .map(
+        s=>"• "+s
+      )
+      .join("\n")
+  );
+
+}
+
+/* =========================================================
+   MAIN RESPONSE ENGINE
+   ========================================================= */
+
+function respond(original){
+
+  const text =
+  clean(original);
+
+  /* NAME */
+
+  const name =
+  original.match(
+    /(?:my name is|call me)\s+([a-zA-Z0-9_-]+)/i
+  );
+
+  if(name){
 
     memory.name =
-      nameMatch[1];
+    name[1];
 
     saveMemory();
 
@@ -535,127 +1067,187 @@ function generateResponse(
 
   }
 
-  /*
-  MATH
-  */
+  /* MATH */
 
   const math =
-    calculate(original);
+  solveMath(original);
 
-  if(math !== null){
+  if(math!==null){
 
     return `The answer is ${math}.`;
 
   }
 
-  /*
-  GREETINGS
-  */
+  /* MEMORY */
+
+  if(
+    text.includes("what is my name") ||
+    text.includes("remember my name")
+  ){
+
+    return memory.name
+      ? `Your name is ${memory.name}.`
+      : "You haven't told me your name yet.";
+
+  }
+
+  /* SUMMARIZE */
+
+  if(
+    text.startsWith("summarize ") ||
+    text.startsWith("summary of ")
+  ){
+
+    return summarize(
+      original
+        .replace(
+          /^summarize\s*/i,
+          ""
+        )
+    );
+
+  }
+
+  /* COMPARISON */
+
+  const comparison =
+  compareThings(text);
+
+  if(comparison){
+
+    return comparison;
+
+  }
+
+  /* KNOWLEDGE */
+
+  const topic =
+  findKnowledge(text);
+
+  if(topic){
+
+    if(
+      wantsSimple(text)
+    ){
+
+      return topic.simple;
+
+    }
+
+    if(
+      wantsExplanation(text)
+    ){
+
+      return topic.answer;
+
+    }
+
+    return topic.answer;
+
+  }
+
+  /* GREETING */
 
   if(
     /\b(hi|hello|hey|yo|sup|howdy)\b/.test(text)
   ){
 
-    if(memory.name){
-
-      return random([
-        `Hey ${memory.name}! What's up?`,
-        `Hello ${memory.name}! How can I help?`,
-        `Hey! Good to see you again, ${memory.name}.`
-      ]);
-
-    }
-
-    return random([
-      "Hey! How can I help?",
-      "Hello! What can I do for you?",
-      "Hey there! Ask me anything.",
-      "Hi! What's on your mind?"
-    ]);
+    return memory.name
+      ? random([
+          `Hey ${memory.name}! How can I help?`,
+          `Hello ${memory.name}! What's up?`,
+          `Hey! What are we working on today?`
+        ])
+      : random([
+          "Hey! How can I help?",
+          "Hello! What would you like to know?",
+          "Hey there! Ask me anything."
+        ]);
 
   }
 
-  /*
-  HOW ARE YOU
-  */
+  /* HOW ARE YOU */
 
   if(
-    text.includes("how are you") ||
-    text.includes("how r u")
+    text.includes("how are you")
   ){
 
     return random([
-      "I'm doing great! Thanks for asking.",
-      "I'm good and ready to help.",
-      "Running perfectly. What are we working on?",
-      "I'm doing well!"
+      "I'm doing great! What can I help you with?",
+      "I'm ready to help!",
+      "Running perfectly. What's up?"
     ]);
 
   }
 
-  /*
-  WHO ARE YOU
-  */
+  /* WHO */
 
   if(
     text.includes("who are you") ||
     text.includes("what are you")
   ){
 
-    return "I'm Nova AI, a browser-based AI simulation made entirely with JavaScript. I don't use an API or an external AI model.";
+    return "I'm Nova AI, a self-contained browser-based AI simulation. I use JavaScript rules, a built-in knowledge base, memory, and text analysis instead of an actual language model.";
 
   }
 
-  /*
-  CREATOR
-  */
+  /* CODING */
 
   if(
-    text.includes("who made you") ||
-    text.includes("who created you")
+    text.includes("code") ||
+    text.includes("coding") ||
+    text.includes("programming")
   ){
 
-    return "I'm a custom AI simulation running inside this webpage.";
+    return random([
+      "Sure. Tell me what you're trying to build and what language you're using.",
+      "I can help explain programming concepts, HTML, CSS, JavaScript, and basic software ideas.",
+      "Describe the feature you want and I can help you break it into smaller pieces."
+    ]);
 
   }
 
-  /*
-  TIME
-  */
+  /* GAMES */
 
   if(
-    text.includes("what time") ||
-    text === "time"
+    text.includes("game") ||
+    text.includes("gaming")
   ){
 
-    return "Your current browser time is " +
-      new Date().toLocaleTimeString() +
-      ".";
+    return random([
+      "I can help with game ideas, mechanics, UI, JavaScript games, and general gaming questions.",
+      "What game or game-development idea are you working on?",
+      "Gaming is a huge topic. Tell me what you're trying to figure out."
+    ]);
 
   }
 
-  /*
-  DATE
-  */
+  /* WHY */
 
   if(
-    text.includes("what date") ||
-    text.includes("what day is it") ||
-    text === "date"
+    text.startsWith("why ")
   ){
 
-    return "Today is " +
-      new Date().toLocaleDateString() +
-      ".";
+    return "The reason usually depends on the specific situation. Give me a little more context and I can break the idea down step by step.";
 
   }
 
-  /*
-  THANKS
-  */
+  /* HOW */
 
   if(
-    /\b(thanks|thank you|thx)\b/.test(text)
+    text.startsWith("how ")
+  ){
+
+    return "I can help break that into steps. Tell me what you're trying to accomplish and I'll explain a practical approach.";
+
+  }
+
+  /* THANKS */
+
+  if(
+    text.includes("thank you") ||
+    text.includes("thanks") ||
+    text==="thx"
   ){
 
     return random([
@@ -667,208 +1259,100 @@ function generateResponse(
 
   }
 
-  /*
-  GOODBYE
-  */
+  /* TIME */
 
   if(
-    /\b(bye|goodbye|see you)\b/.test(text)
+    text.includes("what time") ||
+    text==="time"
   ){
 
-    return random([
-      "See you later!",
-      "Bye!",
-      "Catch you later!",
-      "See you next time!"
-    ]);
+    return (
+      "The current time according to your browser is " +
+      new Date().toLocaleTimeString() +
+      "."
+    );
 
   }
 
-  /*
-  GAMES
-  */
+  /* DATE */
 
   if(
-    text.includes("game") ||
-    text.includes("gaming")
+    text.includes("what date") ||
+    text.includes("what day is it")
   ){
 
-    return random([
-      "Games are definitely one of my favorite things to talk about. What game are you working with?",
-      "What kind of game are you thinking about?",
-      "I can help brainstorm game ideas, mechanics, menus, or JavaScript code."
-    ]);
+    return (
+      "Today's date according to your browser is " +
+      new Date().toLocaleDateString() +
+      "."
+    );
 
   }
 
-  /*
-  JAVASCRIPT
-  */
+  /* HELP */
 
   if(
-    text.includes("javascript") ||
-    text.includes("html") ||
-    text.includes("css") ||
-    text.includes("coding") ||
-    text.includes("code")
-  ){
-
-    return random([
-      "I can help with HTML, CSS, and JavaScript. Tell me what you're trying to build.",
-      "For a browser project, JavaScript is a great place to start. What are you trying to make?",
-      "Sure! Send me the code or describe the feature you want."
-    ]);
-
-  }
-
-  /*
-  AI
-  */
-
-  if(
-    text.includes("artificial intelligence") ||
-    text.includes(" ai ") ||
-    text === "ai"
-  ){
-
-    return "AI is software designed to perform tasks that normally require some form of human-like reasoning, such as understanding language, recognizing patterns, or generating content.";
-
-  }
-
-  /*
-  WEATHER
-  */
-
-  if(
-    text.includes("weather")
-  ){
-
-    return "I can't access live weather data because this AI runs entirely inside your browser. If you give me weather information, though, I can help interpret it.";
-
-  }
-
-  /*
-  INTERNET
-  */
-
-  if(
-    text.includes("internet") ||
-    text.includes("website")
-  ){
-
-    return "The internet is a huge network of connected computers and devices that communicate using standardized protocols.";
-
-  }
-
-  /*
-  HELP
-  */
-
-  if(
-    text === "help" ||
+    text==="help" ||
     text.includes("what can you do")
   ){
 
-    return "I can chat with you, remember your name during future messages, answer simple questions, do basic math, tell you the date and time, and respond to topics I have built-in knowledge for.";
+    return `I can:
+
+• Explain common concepts
+• Explain things simply
+• Answer common questions
+• Do basic math
+• Compare common technologies
+• Summarize text
+• Help with coding concepts
+• Help brainstorm ideas
+• Remember information you tell me
+• Continue a conversation
+
+I'm a simulated AI, so I don't have the unlimited knowledge of a real language model.`;
 
   }
 
-  /*
-  MEMORY
-  */
-
-  if(
-    text.includes("remember my name") ||
-    text.includes("what is my name")
-  ){
-
-    if(memory.name){
-
-      return `Your name is ${memory.name}.`;
-
-    }
-
-    return "You haven't told me your name yet.";
-
-  }
-
-  /*
-  OPINION
-  */
-
-  if(
-    text.includes("favorite")
-  ){
-
-    return random([
-      "I don't have personal preferences, but I can definitely discuss different options.",
-      "I don't have real personal preferences, although I can help compare them.",
-      "That's a good question. I don't experience preferences like a person does."
-    ]);
-
-  }
-
-  /*
-  WHY QUESTIONS
-  */
-
-  if(
-    text.startsWith("why ")
-  ){
-
-    return "That's an interesting question. The answer depends on the specific situation. Give me a little more context and I can try to break it down.";
-
-  }
-
-  /*
-  QUESTION FALLBACKS
-  */
+  /* FALLBACK */
 
   if(
     text.endsWith("?")
   ){
 
     return random([
-      "That's an interesting question. Can you give me a little more context?",
-      "I can try to help with that. What specifically are you trying to figure out?",
-      "I'm not completely sure from that question alone. Tell me a little more.",
-      "Good question. Let's break it down."
+      "That's a good question. I don't have enough built-in information to answer that accurately yet.",
+      "I can try to help, but I need a little more context.",
+      "Interesting question. Can you give me a bit more detail?",
+      "I don't have that topic in my local knowledge base yet."
     ]);
 
   }
 
-  /*
-  GENERAL FALLBACK
-  */
-
   return random([
-    "Interesting. Tell me more about that.",
-    "I understand. What would you like to do with it?",
-    "That sounds interesting. Can you explain what you mean?",
-    "Got it. What should we work on next?",
-    "Okay! I'm listening.",
-    "I see. What are you trying to accomplish?"
+    "Interesting. Tell me more.",
+    "Got it. What would you like to do next?",
+    "I understand. Can you give me more details?",
+    "That sounds interesting. Let's break it down.",
+    "Okay! I'm listening."
   ]);
 
 }
 
-/*
-============================================================
-SEND
-============================================================
-*/
+/* =========================================================
+   SEND MESSAGE
+   ========================================================= */
 
 function sendMessage(){
 
   const text =
-    input.value.trim();
+  input.value.trim();
 
   if(!text){
     return;
   }
 
-  input.value = "";
-  input.style.height = "45px";
+  input.value="";
+  input.style.height="46px";
 
   addMessage(
     "user",
@@ -880,36 +1364,27 @@ function sendMessage(){
     text:text
   });
 
-  const typing =
-    addMessage(
-      "ai",
-      "Thinking..."
-    );
-
-  typing.classList.add(
-    "typing"
+  const ai =
+  addMessage(
+    "ai",
+    "Thinking..."
   );
 
-  /*
-  Small delay makes it feel
-  more like an AI thinking.
-  */
+  ai.classList.add("typing");
 
   const delay =
-    350 +
-    Math.random() * 700;
+  250 +
+  Math.random()*600;
 
-  setTimeout(() => {
+  setTimeout(()=>{
 
     const response =
-      generateResponse(text);
+    respond(text);
 
-    typing.classList.remove(
-      "typing"
-    );
+    ai.classList.remove("typing");
 
-    typing.textContent =
-      response;
+    ai.textContent =
+    response;
 
     conversation.push({
       role:"ai",
@@ -917,45 +1392,90 @@ function sendMessage(){
     });
 
     chat.scrollTop =
-      chat.scrollHeight;
+    chat.scrollHeight;
 
   },delay);
 
 }
 
-/*
-============================================================
-NEW CHAT
-============================================================
-*/
+/* =========================================================
+   NEW CHAT
+   ========================================================= */
 
 function resetChat(){
 
-  conversation = [];
+  conversation=[];
 
-  messages.innerHTML = `
+  messages.innerHTML=`
+
     <div class="welcome" id="welcome">
 
       <h1>How can I help?</h1>
 
       <p>
-        Ask me something and I'll do my best to answer.
+        Ask me questions, ask me to explain things,
+        do math, learn concepts, compare things,
+        or just have a conversation.
       </p>
 
+      <div class="suggestions">
+
+        <button class="suggestion"
+        data-question="Explain gravity simply">
+        Explain gravity
+        </button>
+
+        <button class="suggestion"
+        data-question="What is artificial intelligence?">
+        What is AI?
+        </button>
+
+        <button class="suggestion"
+        data-question="Explain how computers work">
+        How computers work
+        </button>
+
+        <button class="suggestion"
+        data-question="What is JavaScript?">
+        JavaScript
+        </button>
+
+      </div>
+
     </div>
+
   `;
 
-  input.value = "";
-
+  input.value="";
   input.focus();
 
 }
 
-/*
-============================================================
-EVENTS
-============================================================
-*/
+/* =========================================================
+   CLEAR MEMORY
+   ========================================================= */
+
+clearMemory.addEventListener(
+  "click",
+  ()=>{
+
+    memory={};
+
+    localStorage.removeItem(
+      "novaMemory"
+    );
+
+    addMessage(
+      "ai",
+      "My saved memory has been cleared."
+    );
+
+  }
+);
+
+/* =========================================================
+   EVENTS
+   ========================================================= */
 
 send.addEventListener(
   "click",
@@ -969,10 +1489,10 @@ newChat.addEventListener(
 
 input.addEventListener(
   "keydown",
-  function(event){
+  event=>{
 
     if(
-      event.key === "Enter" &&
+      event.key==="Enter" &&
       !event.shiftKey
     ){
 
@@ -989,14 +1509,38 @@ input.addEventListener(
   "input",
   function(){
 
-    this.style.height =
-      "auto";
+    this.style.height="auto";
 
-    this.style.height =
+    this.style.height=
       Math.min(
         this.scrollHeight,
-        150
-      ) + "px";
+        160
+      )+"px";
+
+  }
+);
+
+/* =========================================================
+   SUGGESTION BUTTONS
+   ========================================================= */
+
+document.addEventListener(
+  "click",
+  event=>{
+
+    const button =
+    event.target.closest(
+      ".suggestion"
+    );
+
+    if(!button){
+      return;
+    }
+
+    input.value =
+    button.dataset.question;
+
+    sendMessage();
 
   }
 );
