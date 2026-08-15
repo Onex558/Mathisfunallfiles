@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<base href="https://cdn.jsdelivr.net/gh/Onex558/potesss@main/whatbeatsrock.net/">
+<title>What Beats Rock? — Uranium edition</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+    font-family:Arial,sans-serif;
+    max-width:850px;
+    margin:20px auto;
+    padding:20px;
+    background:#f0f2f5;
+}
+.game-container{
+    text-align:center;
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 2px 10px rgba(0,0,0,.1);
+    position:relative;
+    overflow:hidden;
+}
+h1{color:#1a237e;font-size:2.5em;margin-bottom:10px}
+.subtitle{color:#777;margin-bottom:20px}
+.effect-container{
+    position:absolute;top:0;left:0;width:100%;height:100%;
+    pointer-events:none;z-index:1
+}
+.item-emoji{
+    font-size:120px;margin:25px 0;
+    transition:all .3s ease;position:relative;z-index:2
+}
+.item-emoji.correct{animation:correctAnswer .6s ease}
+.item-emoji.wrong{animation:wrongAnswer .6s ease}
+@keyframes correctAnswer{
+    0%{transform:scale(1)}
+    50%{transform:scale(1.2)}
+    100%{transform:scale(1)}
+}
+@keyframes wrongAnswer{
+    0%,100%{transform:scale(1)}
+    20%{transform:scale(.95) rotate(-5deg)}
+    40%{transform:scale(.95) rotate(5deg)}
+    60%{transform:scale(.95) rotate(-5deg)}
+    80%{transform:scale(.95) rotate(5deg)}
+}
+.flash{
+    position:absolute;top:0;left:0;width:100%;height:100%;
+    pointer-events:none;opacity:0;z-index:1
+}
+.flash.correct{background:rgba(76,175,80,.3);animation:flashEffect .6s ease}
+.flash.wrong{background:rgba(244,67,54,.3);animation:flashEffect .6s ease}
+@keyframes flashEffect{
+    0%{opacity:0}50%{opacity:1}100%{opacity:0}
+}
+.question{font-size:24px;color:#333;margin:20px 0}
+.input-row{
+    display:flex;justify-content:center;gap:10px;flex-wrap:wrap
+}
+input{
+    padding:15px;font-size:18px;width:min(400px,90%);
+    border:2px solid #ddd;border-radius:10px;transition:.3s
+}
+input:focus{
+    outline:none;border-color:#1a237e;
+    box-shadow:0 0 15px rgba(26,35,126,.2)
+}
+button{
+    padding:15px 30px;font-size:18px;background:#1a237e;
+    color:white;border:none;border-radius:10px;cursor:pointer;
+    transition:.3s
+}
+button:hover{background:#283593;transform:translateY(-2px)}
+button:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.score{font-size:24px;margin:20px 0;color:#1a237e}
+.thinking{
+    min-height:25px;margin:10px;color:#666;font-style:italic
+}
+.reason{
+    min-height:30px;margin:15px auto;padding:10px;
+    max-width:650px;border-radius:10px;background:#f8f9fa;color:#333
+}
+.chain-container{
+    margin-top:20px;padding:15px;background:#f8f9fa;border-radius:10px
+}
+.chain-title{font-size:16px;color:#1a237e;margin-bottom:10px}
+.chain{
+    display:flex;flex-wrap:wrap;gap:5px;
+    justify-content:center;align-items:center;font-size:24px
+}
+.chain-item{
+    background:#e3f2fd;border-radius:5px;padding:5px 8px;
+    display:flex;align-items:center;gap:5px;animation:fadeIn .3s ease
+}
+.chain-arrow{color:#1a237e;font-size:14px;margin:0 2px}
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(10px)}
+    to{opacity:1;transform:translateY(0)}
+}
+.restart{
+    margin-top:20px;background:#555;font-size:15px;padding:10px 18px
+}
+.restart:hover{background:#333}
+</style>
+</head>
+
+<body>
+<div class="game-container">
+    <div class="effect-container">
+        <div class="flash" id="effectFlash"></div>
+    </div>
+
+    <h1>What Beats Rock?</h1>
+    <div class="subtitle">Uranium edition</div>
+
+    <div class="score">Score: <span id="score">0</span></div>
+
+    <div class="item-emoji" id="currentEmoji">🪨</div>
+
+    <p class="question">
+        What beats <strong id="currentItem">rock</strong>?
+    </p>
+
+    <div class="input-row">
+        <input
+            type="text"
+            id="answerInput"
+            placeholder="Type literally anything..."
+            autocomplete="off"
+        >
+        <button id="submitButton" onclick="checkAnswer()">Submit</button>
+    </div>
+
+    <div class="thinking" id="thinking"></div>
+    <div class="reason" id="reason">
+        The local AI is ready to judge your answer.
+    </div>
+
+    <div class="chain-container">
+        <div class="chain-title">Chain so far:</div>
+        <div id="chain" class="chain"></div>
+    </div>
+
+    <button class="restart" onclick="restartGame()">Restart Game</button>
+</div>
+
+<script>
+
+
+const things = {
+    rock:{
+        emoji:"🪨",
+        category:"object",
+        beats:["paper","hammer","dynamite","lava","water","wind","fire"],
+        beatenBy:["paper","water","lava","explosion"]
+    },
+    paper:{
+        emoji:"📜",
+        category:"material",
+        beats:["scissors","fire","water","wind"],
+        beatenBy:["rock","scissors","fire"]
+    },
+    scissors:{
+        emoji:"✂️",
+        category:"tool",
+        beats:["paper","rope","string"],
+        beatenBy:["rock","fire","magnet"]
+    },
+    fire:{
+        emoji:"🔥",
+        category:"element",
+        beats:["paper","wood","ice","grass","forest"],
+        beatenBy:["water","sand","extinguisher","rain"]
+    },
+    water:{
+        emoji:"💧",
+        category:"element",
+        beats:["fire","sand","dust","lava"],
+        beatenBy:["sun","lightning","freezing"]
+    },
+    sun:{
+        emoji:"☀️",
+        category:"nature",
+        beats:["ice","snow","darkness"],
+        beatenBy:["cloud","moon","black hole"]
+    },
+    lightning:{
+        emoji:"⚡",
+        category:"energy",
+        beats:["tree","electronics","robot","metal"],
+        beatenBy:["ground","insulator","rubber"]
+    },
+    wind:{
+        emoji:"🌪️",
+        category:"nature",
+        beats:["leaf","kite","smoke","cloud"],
+        beatenBy:["wall","mountain","vacuum"]
+    },
+    magnet:{
+        emoji:"🧲",
+        category:"tool",
+        beats:["metal","iron","robot","compass"],
+        beatenBy:["wood","plastic","rubber"]
+    },
+    robot:{
+        emoji:"🤖",
+        category:"machine",
+        beats:["human","computer","car"],
+        beatenBy:["water","virus","magnet","emp"]
+    },
+    tree:{
+        emoji:"🌳",
+        category:"nature",
+        beats:["paper","air","soil"],
+        beatenBy:["fire","lightning","axe"]
+    },
+    ice:{
+        emoji:"🧊",
+        category:"material",
+        beats:["fire"],
+        beatenBy:["sun","heat","fire"]
+    },
+    lava:{
+        emoji:"🌋",
+        category:"element",
+        beats:["rock","ice","metal"],
+        beatenBy:["water","volcano"]
+    },
+    watergun:{
+        emoji:"🔫",
+        category:"object",
+        beats:["fire"],
+        beatenBy:["empty","broken"]
+    }
+};
+
+const aliases = {
+    stone:"rock",
+    rock:"rock",
+    paper:"paper",
+    sheet:"paper",
+    scissors:"scissors",
+    blade:"scissors",
+    fire:"fire",
+    flame:"fire",
+    water:"water",
+    ocean:"water",
+    rain:"water",
+    sun:"sun",
+    sunlight:"sun",
+    lightning:"lightning",
+    thunder:"lightning",
+    wind:"wind",
+    air:"wind",
+    magnet:"magnet",
+    robot:"robot",
+    tree:"tree",
+    wood:"tree",
+    ice:"ice",
+    snow:"ice",
+    lava:"lava"
+};
+
+const emojiMap = {
+    rock:"🪨",paper:"📜",scissors:"✂️",fire:"🔥",
+    water:"💧",sun:"☀️",lightning:"⚡",wind:"🌪️",
+    magnet:"🧲",robot:"🤖",tree:"🌳",ice:"🧊",lava:"🌋"
+};
+
+let currentItem = "rock";
+let score = 0;
+let chainItems = [];
+let usedAnswers = new Set();
+let busy = false;
+
+const emojiDisplay = document.getElementById("currentEmoji");
+const itemDisplay = document.getElementById("currentItem");
+const answerInput = document.getElementById("answerInput");
+const scoreDisplay = document.getElementById("score");
+const chainDisplay = document.getElementById("chain");
+const effectFlash = document.getElementById("effectFlash");
+const thinkingDisplay = document.getElementById("thinking");
+const reasonDisplay = document.getElementById("reason");
+const submitButton = document.getElementById("submitButton");
+
+function normalize(text){
+    return text
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g,"")
+        .replace(/\s+/g," ");
+}
+
+function canonical(text){
+    const clean = normalize(text);
+    return aliases[clean] || clean;
+}
+
+function emojiFor(name){
+    const key = canonical(name);
+    return emojiMap[key] || "❓";
+}
+
+function showEffect(correct){
+    emojiDisplay.className =
+        "item-emoji " + (correct ? "correct" : "wrong");
+
+    effectFlash.className =
+        "flash " + (correct ? "correct" : "wrong");
+
+    setTimeout(()=>{
+        emojiDisplay.className="item-emoji";
+        effectFlash.className="flash";
+    },600);
+}
+
+function updateChain(){
+    chainDisplay.innerHTML = chainItems.map((item,i)=>`
+        <div class="chain-item">
+            ${item.questionEmoji} → ${item.answerEmoji}
+        </div>
+        ${i < chainItems.length-1 ? '<span class="chain-arrow">→</span>' : ''}
+    `).join("");
+}
+
+function setQuestion(name){
+    currentItem = canonical(name);
+    emojiDisplay.textContent = emojiFor(currentItem);
+    itemDisplay.textContent = currentItem;
+    answerInput.value = "";
+    answerInput.focus();
+}
+
+/*
+    The fake AI judge.
+    It first checks known relationships, then uses broad
+    category rules and finally a simple "interesting answer"
+    fallback so the game isn't limited to a fixed list.
+*/
+function localAIJudge(answer,target){
+    const a = canonical(answer);
+    const t = canonical(target);
+
+    if(!a) return {
+        correct:false,
+        reason:"The AI needs an answer first."
+    };
+
+    if(a === t) return {
+        correct:false,
+        reason:"You can't beat something with itself."
+    };
+
+    if(usedAnswers.has(a)) return {
+        correct:false,
+        reason:"You already used that answer in this chain."
+    };
+
+    const targetData = things[t];
+
+    if(targetData && targetData.beats.includes(a)){
+        return {
+            correct:true,
+            reason:`${capitalize(a)} can beat ${t} according to the local AI's rules.`
+        };
+    }
+
+    if(targetData && targetData.beatenBy.includes(a)){
+        return {
+            correct:true,
+            reason:`${capitalize(a)} is a known counter to ${t}.`
+        };
+    }
+
+    /*
+        General keyword intelligence.
+    */
+    const fireWords=["fire","flame","lava","laser","sun","heat","explosion"];
+    const waterWords=["water","rain","ocean","flood","ice","snow"];
+    const destructionWords=[
+        "bomb","explosion","missile","black hole","meteor",
+        "nuke","volcano","dynamite","laser"
+    ];
+    const strongWords=[
+        "god","superman","dragon","black hole","infinity",
+        "universe","gravity","time","death"
+    ];
+    const softWords=["paper","leaf","feather","cloud","smoke","snow"];
+
+    if(t==="fire" && waterWords.includes(a)){
+        return {correct:true,reason:`${capitalize(a)} can put out fire.`};
+    }
+
+    if(t==="water" && fireWords.includes(a)){
+        return {correct:true,reason:`${capitalize(a)} can overpower or remove water through heat or evaporation.`};
+    }
+
+    if(t==="ice" && fireWords.includes(a)){
+        return {correct:true,reason:`${capitalize(a)} melts ice.`};
+    }
+
+    if(t==="rock" && destructionWords.includes(a)){
+        return {correct:true,reason:`${capitalize(a)} can destroy or overpower rock.`};
+    }
+
+    if(strongWords.includes(a)){
+        return {correct:true,reason:`${capitalize(a)} is powerful enough to beat ${t} in the local AI's imaginary rules.`};
+    }
+
+    if(destructionWords.includes(a)){
+        return {correct:true,reason:`${capitalize(a)} has enough destructive power to beat ${t}.`};
+    }
+
+    if(t==="paper" && (a==="scissors" || a==="fire")){
+        return {correct:true,reason:`${capitalize(a)} defeats paper.`};
+    }
+
+    if(t==="tree" && (a==="fire" || a==="lightning" || a==="axe")){
+        return {correct:true,reason:`${capitalize(a)} can destroy a tree.`};
+    }
+
+    if(t==="robot" && ["virus","water","magnet","emp"].includes(a)){
+        return {correct:true,reason:`${capitalize(a)} can disable or damage a robot.`};
+    }
+
+    /*
+        If the answer sounds like a physical counter, allow it.
+        This makes the game feel much less rigid than a normal
+        Rock-Paper-Scissors style game.
+    */
+    const counterWords=[
+        "destroy","destroys","break","breaker","kill","defeat",
+        "erase","delete","crush","melt","burn","freeze","stop",
+        "destroyer","weapon","monster","god"
+    ];
+
+    if(counterWords.some(word=>a.includes(word))){
+        return {
+            correct:true,
+            reason:`The local AI interprets "${answer}" as something capable of overcoming ${t}.`
+        };
+    }
+
+    /*
+        Creative fallback:
+        Some answers are accepted randomly based on a deterministic
+        score. This keeps unknown objects playable without an API.
+    */
+    let hash=0;
+    const combined=a+"|"+t;
+    for(let i=0;i<combined.length;i++){
+        hash=((hash<<5)-hash)+combined.charCodeAt(i);
+        hash|=0;
+    }
+
+    if(Math.abs(hash)%5===0){
+        return {
+            correct:true,
+            reason:`The AI decided that ${capitalize(a)} beats ${t}. That's the rule now!`
+        };
+    }
+
+    return {
+        correct:false,
+        reason:`The local AI couldn't find a convincing way for ${capitalize(a)} to beat ${t}. Try something stronger or more creative.`
+    };
+}
+
+function capitalize(text){
+    return text.charAt(0).toUpperCase()+text.slice(1);
+}
+
+function checkAnswer(){
+    if(busy) return;
+
+    const answer=normalize(answerInput.value);
+    if(!answer) return;
+
+    busy=true;
+    submitButton.disabled=true;
+    answerInput.disabled=true;
+
+    thinkingDisplay.textContent="🤖 AI is thinking...";
+
+    setTimeout(()=>{
+        const result=localAIJudge(answer,currentItem);
+
+        thinkingDisplay.textContent =
+            result.correct ? "🤖 AI says: YES!" : "🤖 AI says: NO!";
+
+        reasonDisplay.textContent=result.reason;
+        showEffect(result.correct);
+
+        if(result.correct){
+            score++;
+            scoreDisplay.textContent=score;
+
+            usedAnswers.add(canonical(answer));
+
+            chainItems.push({
+                questionEmoji:emojiDisplay.textContent,
+                answerEmoji:emojiFor(answer)
+            });
+
+            updateChain();
+
+            setTimeout(()=>{
+                setQuestion(answer);
+                thinkingDisplay.textContent="";
+                busy=false;
+                submitButton.disabled=false;
+                answerInput.disabled=false;
+            },700);
+        }else{
+            answerInput.value="";
+            setTimeout(()=>{
+                thinkingDisplay.textContent="";
+                busy=false;
+                submitButton.disabled=false;
+                answerInput.disabled=false;
+                answerInput.focus();
+            },500);
+        }
+    },500);
+}
+
+function restartGame(){
+    currentItem="rock";
+    score=0;
+    chainItems=[];
+    usedAnswers=new Set();
+    busy=false;
+
+    scoreDisplay.textContent="0";
+    thinkingDisplay.textContent="";
+    reasonDisplay.textContent="The local AI is ready to judge your answer.";
+
+    submitButton.disabled=false;
+    answerInput.disabled=false;
+
+    setQuestion("rock");
+}
+
+answerInput.addEventListener("keydown",event=>{
+    if(event.key==="Enter") checkAnswer();
+});
+
+setQuestion("rock");
+</script>
+</body>
+</html>
